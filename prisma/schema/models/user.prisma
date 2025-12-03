@@ -1,0 +1,48 @@
+
+
+
+
+
+model User {
+  id    String @id @default(uuid())
+  name  String
+  email String @unique 
+  password String 
+  role Role @default(TOURIST)
+  bio  String
+  profilePhoto String
+  isDeleted Boolean @default(false)
+  status UserStatus
+  credentials String[]
+ language String[]
+
+ guideInfo GuideInfo?
+ touristInfo TouristInfo?
+ listing Listing[]
+touristBookings Booking[] @relation("TouristBookings")
+ guideBookings   Booking[] @relation("GuideBookings")
+  createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@map("user")
+
+}
+
+
+
+model GuideInfo {
+  id       String  @id @default(uuid())
+  userId   String  @unique
+  expertise String[]
+  dailyRate Float
+
+  user     User    @relation(fields: [userId], references: [id])
+}
+model TouristInfo {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  preferences String[]
+
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+

@@ -1,0 +1,37 @@
+
+model Booking {
+    id String @id @default(uuid())
+    startDate DateTime
+    endDate DateTime
+    touristId String
+    Tourist User @relation("TouristBookings",fields: [touristId],references: [id])
+    listingId String
+    listing Listing @relation(fields: [listingId],references: [id])
+    guideId String
+    guide User @relation("GuideBookings",fields: [guideId],references: [id])
+    status BookingStatus @default(PENDING)
+    groupSize    Int 
+     totalAmount  Float
+     paymentStatus PaymentStatus @default(UNPAID)
+     payment Payment[]
+      createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+@@map("booking")
+  
+}
+
+
+model Payment {
+    id String @id @default(uuid())
+    bookingID String
+    booking Booking @relation(fields: [bookingID],references: [id])
+    amount Float
+    status  PaymentStatus @default(UNPAID)
+    paymentgetwayData Json?
+    transectionId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    @@map("payment")
+
+
+}

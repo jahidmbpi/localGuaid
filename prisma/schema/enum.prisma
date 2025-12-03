@@ -1,0 +1,23 @@
+enum Role {
+  TOURIST
+  GUIDE
+  ADMIN
+}
+enum UserStatus {
+    BLOCK
+    INACTIVE
+    ACTIVE
+}
+
+enum BookingStatus {
+  PENDING
+  CONFRIMED  
+  COMPLETED
+  CENCELLED   
+}
+
+
+enum PaymentStatus {
+    PAID
+    UNPAID
+}
