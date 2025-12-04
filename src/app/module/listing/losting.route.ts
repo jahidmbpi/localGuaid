@@ -15,5 +15,6 @@ router.post(
   cheakAuth(Role.GUIDE),
   listingContorller.createListing
 );
+router.patch("/:id", cheakAuth(Role.GUIDE), listingContorller.UpdateListing);
 
 export const listingRouter = router;

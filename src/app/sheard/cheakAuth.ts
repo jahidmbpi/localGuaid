@@ -23,7 +23,7 @@ const cheakAuth = (...alloewedRole: Role[]) => {
         accessTocken,
         envVars.JWT_ACCESS_SECRET
       ) as JwtPayload;
-      console.log(verifyTocken);
+
       const isExsitUser = await prisma.user.findUnique({
         where: {
           email: verifyTocken.email,
