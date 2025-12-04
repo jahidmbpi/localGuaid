@@ -10,7 +10,7 @@ model User {
   isDeleted Boolean @default(false)
   status UserStatus @default(ACTIVE)
   credentials String[]
- language String[]
+  language String[]
 
  guideInfo GuideInfo?
  touristInfo TouristInfo?
@@ -28,8 +28,8 @@ model GuideInfo {
   userId   String  @unique
   expertise String[]
   dailyRate Float
-
   user     User    @relation(fields: [userId], references: [id])
+  @@map("guaidInfo")
 }
 model TouristInfo {
   id         String   @id @default(uuid())
@@ -37,6 +37,7 @@ model TouristInfo {
   preferences String[]
 
   user       User     @relation(fields: [userId], references: [id])
+
 }
 
 
