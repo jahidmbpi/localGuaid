@@ -24,3 +24,5 @@ const createUserTocken = (user: User) => {
     refreshTocken,
   };
 };
+
+export default createUserTocken;
