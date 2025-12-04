@@ -7,9 +7,12 @@ const validateRequest =
     try {
       let body = req.body?.data || req.body;
       if (typeof body === "string") {
-        body = JSON.stringify(body);
+        body = JSON.parse(body);
       }
-      body = await zodSchema.parseAsync(body);
+      const parse = await zodSchema.parseAsync(body);
+
+      req.body = parse;
+      next();
     } catch (error) {
       next(error);
     }
