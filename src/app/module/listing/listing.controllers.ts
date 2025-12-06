@@ -17,6 +17,15 @@ const createListing = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getAllListing = catchAsync(async (req: Request, res: Response) => {
+  const result = await listingServices.getAllLising();
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.CREATED,
+    message: " all listing retrived success",
+    data: result,
+  });
+});
 
 const UpdateListing = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -31,8 +40,20 @@ const UpdateListing = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
+const deleteListing = catchAsync(async (req: Request, res: Response) => {
+  const listingId = req.params.id;
+  const user = req.user;
+  const result = await listingServices.deleteListing(listingId, user);
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.CREATED,
+    message: "listing delete success",
+    data: result,
+  });
+});
 export const listingContorller = {
   createListing,
   UpdateListing,
+  deleteListing,
+  getAllListing,
 };

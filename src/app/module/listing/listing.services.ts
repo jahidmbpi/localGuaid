@@ -28,6 +28,11 @@ const createListing = async (
   return result;
 };
 
+const getAllLising = async () => {
+  const result = await prisma.listing.findMany();
+  return result;
+};
+
 const UpdateListing = async (
   paylod: Partial<Listing>,
   listingId: string,
@@ -80,7 +85,37 @@ const UpdateListing = async (
   return result;
 };
 
+const deleteListing = async (lisTingId: string, user: JwtPayload) => {
+  const isExistListing = await prisma.listing.findFirst({
+    where: {
+      id: lisTingId,
+    },
+  });
+
+  if (!isExistListing) {
+    throw new AppError(StatusCodes.NOT_FOUND, "listing not found ");
+  }
+
+  if (isExistListing.isActive) {
+    throw new AppError(StatusCodes.BAD_REQUEST, "this listing already block");
+  }
+
+  if (isExistListing.guideId !== user.UserId) {
+    throw new AppError(
+      StatusCodes.UNAUTHORIZED,
+      "you are not permited for this route"
+    );
+  }
+  const deleteListing = await prisma.listing.delete({
+    where: {
+      id: lisTingId,
+    },
+  });
+  return deleteListing;
+};
 export const listingServices = {
   createListing,
   UpdateListing,
+  deleteListing,
+  getAllLising,
 };

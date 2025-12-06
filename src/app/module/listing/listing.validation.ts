@@ -56,3 +56,68 @@ export const createListingSchema = z.object({
 
   isActive: z.boolean().optional(),
 });
+export const updateListingSchema = z.object({
+  title: z
+    .string({
+      error: "Title is required",
+    })
+    .min(3, "Title must be at least 3 characters")
+    .optional(),
+
+  description: z
+    .string({
+      error: "Description is required",
+    })
+    .min(10, "Description must be at least 10 characters")
+    .optional(),
+
+  itinerary: z.string().optional(),
+
+  city: z
+    .string({
+      error: "City is required",
+    })
+    .min(2, "City name must be at least 2 characters")
+    .optional(),
+
+  category: z
+    .string({
+      error: "Category is required",
+    })
+    .optional(),
+
+  price: z
+    .number({
+      error: "Price is required",
+    })
+    .positive("Price must be greater than 0")
+    .optional(),
+
+  duration: z
+    .number({
+      error: "Duration is required",
+    })
+    .positive("Duration must be positive")
+    .optional(),
+
+  meetingPoint: z
+    .string({
+      error: "Meeting point is required",
+    })
+    .min(3, "Meeting point must be meaningful")
+    .optional(),
+
+  maxGroupSize: z
+    .number({
+      error: "Max group size is required",
+    })
+    .positive("Group size must be positive")
+    .optional(),
+
+  images: z
+    .array(z.string().url("Image must be a valid URL"))
+    .nonempty("At least one image is required")
+    .optional(),
+
+  isActive: z.boolean().optional(),
+});

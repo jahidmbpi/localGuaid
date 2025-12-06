@@ -5,7 +5,7 @@ import { Role } from "@prisma/client";
 
 import { multerUpload } from "../../config/multer.config";
 import validateRequest from "../../sheard/validation";
-import { createListingSchema } from "./listing.validation";
+import { createListingSchema, updateListingSchema } from "./listing.validation";
 
 const router = Router();
 router.post(
@@ -15,6 +15,11 @@ router.post(
   cheakAuth(Role.GUIDE),
   listingContorller.createListing
 );
-router.patch("/:id", cheakAuth(Role.GUIDE), listingContorller.UpdateListing);
-
+router.patch(
+  "/:id",
+  validateRequest(updateListingSchema),
+  cheakAuth(Role.GUIDE),
+  listingContorller.UpdateListing
+);
+router.delete("/:id", cheakAuth(Role.GUIDE), listingContorller.deleteListing);
 export const listingRouter = router;
