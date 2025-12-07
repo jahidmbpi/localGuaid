@@ -1,4 +1,4 @@
-import { PaymentStatus, UserStatus } from "@prisma/client";
+import { BookingStatus, PaymentStatus, UserStatus } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../../config/prisma";
 import AppError from "../../helper/appError";
@@ -66,6 +66,9 @@ const getAllBooking = async (option: IPagination) => {
   const result = await prisma.booking.findMany({
     take: limit,
     skip,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
   });
   const total = await prisma.booking.count();
   return {
@@ -78,7 +81,33 @@ const getAllBooking = async (option: IPagination) => {
   };
 };
 
+const myBooking = async (id: string, option: IPagination) => {
+  const { page, limit, skip, sortBy, sortOrder } =
+    calculatatePagination(option);
+  const reult = await prisma.booking.findMany({
+    where: {
+      guideId: id,
+      status: BookingStatus.PENDING,
+    },
+    take: limit,
+    skip,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+  const total = await prisma.booking.count();
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: reult,
+  };
+};
+
 export const bookingServices = {
   createBooking,
   getAllBooking,
+  myBooking,
 };

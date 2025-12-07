@@ -23,12 +23,26 @@ const getALlbooking = catchAsync(async (req: Request, res: Response) => {
   const result = await bookingServices.getAllBooking(option);
   sendResponse(res, {
     success: true,
-    message: "booking create succsess",
+    message: "all booking retrived succsess",
     statusCode: StatusCodes.CREATED,
     data: result,
   });
 });
+
+const myBooking = catchAsync(async (req: Request, res: Response) => {
+  const id = req.user.userId;
+  const option = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+  const result = await bookingServices.myBooking(id, option);
+  sendResponse(res, {
+    success: true,
+    message: "my booking retrived success",
+    statusCode: StatusCodes.CREATED,
+    data: result,
+  });
+});
+
 export const bookingController = {
   createBooking,
   getALlbooking,
+  myBooking,
 };

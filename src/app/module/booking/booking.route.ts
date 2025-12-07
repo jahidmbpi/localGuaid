@@ -10,4 +10,11 @@ router.post(
   bookingController.createBooking
 );
 
+router.get(
+  "/getallbooking",
+  cheakAuth(Role.GUIDE, Role.ADMIN),
+  bookingController.getALlbooking
+);
+router.get("/mybooking", cheakAuth(Role.GUIDE), bookingController.myBooking);
+
 export const bookingRouter = router;
