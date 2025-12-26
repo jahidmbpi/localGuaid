@@ -16,7 +16,17 @@ const becomeGuaid = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getAllPopularGuaid = catchAsync(async (req: Request, res: Response) => {
+  const result = await guaidServices.getAllPopularGuaid();
+  sendResponse(res, {
+    success: true,
+    message: "popular guaid data retrived secsess",
+    statusCode: StatusCodes.OK,
+    data: result,
+  });
+});
 
 export const guaidController = {
   becomeGuaid,
+  getAllPopularGuaid,
 };

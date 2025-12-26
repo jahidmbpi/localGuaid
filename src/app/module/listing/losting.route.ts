@@ -21,6 +21,7 @@ router.get(
   cheakAuth(Role.TOURIST),
   listingContorller.getAllListing
 );
+router.get("/popular", listingContorller.popularListing);
 
 router.patch(
   "/:id",

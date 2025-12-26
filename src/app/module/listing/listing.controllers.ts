@@ -61,9 +61,19 @@ const deleteListing = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const popularListing = catchAsync(async (req: Request, res: Response) => {
+  const result = await listingServices.popolarListing();
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: " popular listing retrived success",
+    data: result,
+  });
+});
 export const listingContorller = {
   createListing,
   UpdateListing,
   deleteListing,
   getAllListing,
+  popularListing,
 };

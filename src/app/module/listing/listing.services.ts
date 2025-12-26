@@ -162,9 +162,26 @@ const deleteListing = async (lisTingId: string, user: JwtPayload) => {
   });
   return deleteListing;
 };
+
+const popolarListing = async () => {
+  const result = await prisma.listing.findMany({
+    where: {
+      bookingCount: {
+        gte: 3,
+      },
+    },
+    take: 4,
+    orderBy: {
+      bookingCount: "desc",
+    },
+  });
+  return result;
+};
+
 export const listingServices = {
   createListing,
   UpdateListing,
   deleteListing,
   getAllLising,
+  popolarListing,
 };

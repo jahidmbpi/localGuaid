@@ -16,6 +16,7 @@ model Listing {
   bookings     Booking[]
   guideId      String
   guide User @relation(fields: [guideId],references: [id])
+  bookingCount Int @default(0)
 
 
   

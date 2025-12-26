@@ -6,7 +6,6 @@ import { StatusCodes } from "http-status-codes";
 import { ICreateBooking } from "./booking.interface";
 import { IPagination } from "../../interface/interface";
 import calculatatePagination from "../../sheard/calculatePagination";
-
 const createBooking = async (
   payload: ICreateBooking,
   user: JwtPayload,
@@ -53,6 +52,16 @@ const createBooking = async (
     totalAmount: totalamount,
     paymentStatus: PaymentStatus.UNPAID,
   };
+  await prisma.listing.update({
+    where: {
+      id: listingId,
+    },
+    data: {
+      bookingCount: {
+        increment: 1,
+      },
+    },
+  });
   const createBooking = await prisma.booking.create({
     data: bookingData,
   });

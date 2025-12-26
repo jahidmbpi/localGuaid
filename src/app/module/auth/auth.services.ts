@@ -6,6 +6,7 @@ import { Response } from "express";
 import createUserTocken from "../../sheard/createTocken";
 import { UserStatus } from "@prisma/client";
 import { setCoockie } from "../../sheard/setCoockie";
+import { JwtPayload } from "jsonwebtoken";
 const logInWithEmailAndPassword = async (
   res: Response,
   payload: {
@@ -50,6 +51,40 @@ const logInWithEmailAndPassword = async (
   };
 };
 
+const Me = async (user: JwtPayload) => {
+  if (!user?.userId) {
+    throw new Error("Unauthorized user");
+  }
+
+  const loggedInUser = await prisma.user.findUnique({
+    where: {
+      id: user.userId,
+      isDeleted: false,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      bio: true,
+      profilePhoto: true,
+      status: true,
+      language: true,
+      credentials: true,
+      guideInfo: true,
+      touristInfo: true,
+      createdAt: true,
+    },
+  });
+
+  if (!loggedInUser) {
+    throw new AppError(404, "User not found");
+  }
+
+  return loggedInUser;
+};
+
 export const authServices = {
   logInWithEmailAndPassword,
+  Me,
 };

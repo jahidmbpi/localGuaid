@@ -19,6 +19,18 @@ const logInWithEmailAndPassword = catchAsync(
   }
 );
 
+const Me = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user;
+  const result = await authServices.Me(user);
+
+  sendResponse(res, {
+    success: true,
+    message: "logedIn user retrived succesfully",
+    statusCode: StatusCodes.OK,
+    data: result,
+  });
+});
 export const authController = {
   logInWithEmailAndPassword,
+  Me,
 };

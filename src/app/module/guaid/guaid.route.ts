@@ -9,5 +9,6 @@ router.post(
   cheakAuth(Role.TOURIST),
   guaidController.becomeGuaid
 );
+router.get("/popular-guaid", guaidController.getAllPopularGuaid);
 
 export const guaidRouter = router;

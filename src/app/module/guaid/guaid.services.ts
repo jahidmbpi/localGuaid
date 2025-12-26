@@ -46,6 +46,27 @@ const becomeGuaid = async (user: JwtPayload, payload: GuideInfo) => {
   return result;
 };
 
+const getAllPopularGuaid = async () => {
+  const result = await prisma.user.findMany({
+    where: {
+      role: "GUIDE",
+      isDeleted: false,
+      status: "ACTIVE",
+    },
+    select: {
+      profilePhoto: true,
+      name: true,
+      email: true,
+      bio: true,
+    },
+  });
+  if (!result) {
+    throw new AppError(StatusCodes.NOT_FOUND, "not popular guaid found");
+  }
+  return result;
+};
+
 export const guaidServices = {
   becomeGuaid,
+  getAllPopularGuaid,
 };
