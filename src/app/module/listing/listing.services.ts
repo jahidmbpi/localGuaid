@@ -34,7 +34,7 @@ const createListing = async (
 const getAllLising = async (filter: any, option: IPagination) => {
   const { page, limit, skip, sortBy, sortOrder } =
     calculatatePagination(option);
-  console.log(page, limit, skip, sortBy, sortOrder);
+  console.log(page, limit, skip);
   const { searchTarm, ...filterData } = filter;
   console.log(searchTarm);
 

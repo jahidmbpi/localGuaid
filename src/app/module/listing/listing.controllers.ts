@@ -28,6 +28,7 @@ const getAllListing = catchAsync(async (req: Request, res: Response) => {
     "sortBy",
     "sortOrder",
   ]);
+  console.log(req.query);
   const result = await listingServices.getAllLising(filter, option);
   sendResponse(res, {
     success: true,

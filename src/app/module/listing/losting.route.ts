@@ -18,7 +18,7 @@ router.post(
 
 router.get(
   "/getALlListing",
-  cheakAuth(Role.TOURIST),
+  // cheakAuth(...Object.values(Role)),
   listingContorller.getAllListing
 );
 router.get("/popular", listingContorller.popularListing);

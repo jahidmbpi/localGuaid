@@ -51,9 +51,22 @@ const confrimBooking = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const turistBooking = catchAsync(async (req: Request, res: Response) => {
+  const id = req.user.userId;
+  const option = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+  const result = await bookingServices.turistBooking(id, option);
+  sendResponse(res, {
+    success: true,
+    message: "turist booking retrived success",
+    statusCode: StatusCodes.CREATED,
+    data: result,
+  });
+});
+
 export const bookingController = {
   createBooking,
   getALlbooking,
   myBooking,
   confrimBooking,
+  turistBooking,
 };

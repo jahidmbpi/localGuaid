@@ -7,6 +7,7 @@ interface ENVconfig {
   CLOUDENARY_API_SECRET: string;
   JWT_ACCESS_SECRET: string;
   JWT_ACCESS_EXPIRE: string;
+  FRONTEND_URL: string;
 }
 
 const loadEnvVariable = (): ENVconfig => {
@@ -17,6 +18,7 @@ const loadEnvVariable = (): ENVconfig => {
     "CLOUDENARY_API_SECRET",
     "JWT_ACCESS_SECRET",
     "JWT_ACCESS_EXPIRE",
+    "FRONTEND_URL",
   ];
   requireVariable.forEach((key) => {
     if (!process.env[key]) {
@@ -31,6 +33,7 @@ const loadEnvVariable = (): ENVconfig => {
     CLOUDENARY_API_SECRET: process.env.CLOUDENARY_API_SECRET as string,
     JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET as string,
     JWT_ACCESS_EXPIRE: process.env.JWT_ACCESS_EXPIRE as string,
+    FRONTEND_URL: process.env.FRONTEND_URL as string,
   };
 };
 export const envVars = loadEnvVariable();

@@ -157,9 +157,34 @@ const confrimBooking = async (
   return updateBooking;
 };
 
+const turistBooking = async (id: string, option: IPagination) => {
+  const { page, limit, skip, sortBy, sortOrder } =
+    calculatatePagination(option);
+  const reult = await prisma.booking.findMany({
+    where: {
+      touristId: id,
+    },
+
+    take: limit,
+    skip,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+  const total = await prisma.booking.count();
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: reult,
+  };
+};
 export const bookingServices = {
   createBooking,
   getAllBooking,
   myBooking,
   confrimBooking,
+  turistBooking,
 };

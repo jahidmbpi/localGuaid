@@ -16,6 +16,11 @@ router.get(
   bookingController.getALlbooking
 );
 router.get("/mybooking", cheakAuth(Role.GUIDE), bookingController.myBooking);
+router.get(
+  "/turistBooking",
+  cheakAuth(Role.TOURIST),
+  bookingController.turistBooking
+);
 
 router.patch("/id", cheakAuth(Role.GUIDE), bookingController.confrimBooking);
 

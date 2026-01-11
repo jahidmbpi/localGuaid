@@ -6,12 +6,14 @@ const validateRequest =
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       let body = req.body?.data || req.body;
+
       if (typeof body === "string") {
         body = JSON.parse(body);
       }
       const parse = await zodSchema.parseAsync(body);
 
       req.body = parse;
+      console.log("console from validate", req.body);
       next();
     } catch (error) {
       next(error);

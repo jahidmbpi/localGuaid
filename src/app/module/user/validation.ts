@@ -2,14 +2,14 @@ import { string } from "./../../../../node_modules/zod/src/v4/core/regexes";
 import { Role } from "@prisma/client";
 import z, { email } from "zod";
 
-const createUserZodSchema = z.object({
+export const createUserZodSchema = z.object({
   name: z.string(),
   email: z.string({ error: "email is required" }).email(),
   password: z.string({ error: "password is required" }),
   role: z.string().optional().default(Role.TOURIST),
   bio: z.string().optional(),
   profilePhoto: z.string().optional(),
-  language: z.array(z.string()),
+  language: z.array(z.string()).optional(),
 });
 
 const updateUserZodSchema = z.object({
