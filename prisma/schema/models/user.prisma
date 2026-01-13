@@ -4,6 +4,7 @@ model User {
   name  String
   email String @unique 
   password String 
+  phone String?
   role Role @default(TOURIST)
   bio  String?
   profilePhoto String?
@@ -11,11 +12,13 @@ model User {
   status UserStatus @default(ACTIVE)
   credentials String[]
   language String[]
- guideInfo GuideInfo?
- touristInfo TouristInfo?
- listing Listing[]
-touristBookings Booking[] @relation("TouristBookings")
- guideBookings   Booking[] @relation("GuideBookings")
+  guideInfo GuideInfo?
+  touristInfo TouristInfo?
+  listing Listing[]
+  presentAddress String?
+  parmanentAddress String?
+  touristBookings Booking[] @relation("TouristBookings")
+  guideBookings   Booking[] @relation("GuideBookings")
   createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
  @@map("user")

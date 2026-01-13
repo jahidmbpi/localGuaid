@@ -4,7 +4,7 @@ import AppError from "../../helper/appError";
 import bcrypt from "bcryptjs";
 import { Response } from "express";
 import createUserTocken from "../../sheard/createTocken";
-import { UserStatus } from "@prisma/client";
+import { Role, UserStatus } from "@prisma/client";
 import { setCoockie } from "../../sheard/setCoockie";
 import { JwtPayload } from "jsonwebtoken";
 const logInWithEmailAndPassword = async (
@@ -67,12 +67,15 @@ const Me = async (user: JwtPayload) => {
       email: true,
       role: true,
       bio: true,
+      phone: true,
+      parmanentAddress: true,
+      presentAddress: true,
       profilePhoto: true,
       status: true,
       language: true,
       credentials: true,
-      guideInfo: true,
-      touristInfo: true,
+      guideInfo: user.role === Role.GUIDE,
+      touristInfo: user.role === Role.TOURIST,
       createdAt: true,
     },
   });
