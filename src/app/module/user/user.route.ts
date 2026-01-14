@@ -16,4 +16,11 @@ router.post(
 );
 router.get("/getalluser", cheakAuth(Role.ADMIN), userController.getAllUser);
 
+router.patch(
+  "/:id",
+  multerUpload.single("file"),
+  cheakAuth(...Object.values(Role)),
+  userController.updateUserById
+);
+
 export const userRouter = router;

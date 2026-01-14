@@ -23,8 +23,22 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const updateUserById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const user = req.user;
+  const payload = req.body;
+  const file = req.file;
 
+  const result = await userServices.updateUserById(id, user, payload, file);
+  sendResponse(res, {
+    success: true,
+    message: "user updated succesfully",
+    statusCode: StatusCodes.OK,
+    data: result,
+  });
+});
 export const userController = {
   createUser,
   getAllUser,
+  updateUserById,
 };
