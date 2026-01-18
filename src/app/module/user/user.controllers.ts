@@ -24,12 +24,7 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const updateUserById = catchAsync(async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const user = req.user;
-  const payload = req.body;
-  const file = req.file;
-
-  const result = await userServices.updateUserById(id, user, payload, file);
+  const result = await userServices.updateUserById(req);
   sendResponse(res, {
     success: true,
     message: "user updated succesfully",
@@ -37,8 +32,30 @@ const updateUserById = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const getUserById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const user = await userServices.getUserById(id);
+
+    res.status(StatusCodes.OK).json({
+      success: true,
+      statusCode: StatusCodes.OK,
+      message: "User fetched successfully",
+      data: user,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      statusCode: error.statusCode || 500,
+      message: error.message || "Something went wrong",
+    });
+  }
+};
 export const userController = {
   createUser,
   getAllUser,
   updateUserById,
+  getUserById,
 };

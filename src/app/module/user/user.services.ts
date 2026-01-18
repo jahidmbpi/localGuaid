@@ -96,9 +96,37 @@ const updateUserById = async (req: Request) => {
   });
   return result;
 };
+const getUserById = async (id: string) => {
+  const user = await prisma.user.findUnique({
+    where: { id },
+    include: {
+      guideInfo: true,
+      touristBookings: true,
+    },
+  });
+
+  if (!user) {
+    throw new AppError(404, "User not found");
+  }
+
+  if (user.isDeleted) {
+    throw new AppError(404, "This user is deleted, please contact authority");
+  }
+
+  if (user.status === "BLOCK" || user.status === "INACTIVE") {
+    throw new AppError(
+      403,
+      "This user is blocked or inactive, please contact authority"
+    );
+  }
+
+  const { password, ...withoutPassword } = user;
+  return withoutPassword;
+};
 
 export const userServices = {
   createUser,
   getAllUser,
   updateUserById,
+  getUserById,
 };

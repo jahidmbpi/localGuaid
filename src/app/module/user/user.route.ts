@@ -15,7 +15,11 @@ router.post(
   userController.createUser
 );
 router.get("/getalluser", cheakAuth(Role.ADMIN), userController.getAllUser);
-
+router.get(
+  "/:id",
+  cheakAuth(...Object.values(Role)),
+  userController.getUserById
+);
 router.patch(
   "/:id",
   multerUpload.single("file"),
