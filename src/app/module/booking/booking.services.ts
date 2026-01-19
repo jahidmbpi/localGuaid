@@ -6,66 +6,100 @@ import { StatusCodes } from "http-status-codes";
 import { ICreateBooking } from "./booking.interface";
 import { IPagination } from "../../interface/interface";
 import calculatatePagination from "../../sheard/calculatePagination";
+import { v4 as uuid } from "uuid";
+
 const createBooking = async (
   payload: ICreateBooking,
   user: JwtPayload,
-  listingId: string
+  listingId: string,
 ) => {
-  const isExistGuid = await prisma.user.findUnique({
-    where: {
-      id: payload.guideId,
-    },
+  const isExistGuide = await prisma.user.findUnique({
+    where: { id: payload.guideId },
   });
-  if (!isExistGuid) {
-    throw new AppError(StatusCodes.NOT_FOUND, "guaid not found");
+
+  if (!isExistGuide) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Guide not found");
   }
+
   if (
-    isExistGuid.status === UserStatus.BLOCK ||
-    isExistGuid.status === UserStatus.INACTIVE
+    isExistGuide.status === UserStatus.BLOCK ||
+    isExistGuide.status === UserStatus.INACTIVE
   ) {
     throw new AppError(StatusCodes.BAD_REQUEST, "This guide is not available");
   }
 
   const isExistListing = await prisma.listing.findFirst({
-    where: {
-      id: listingId,
-      isActive: true,
-    },
+    where: { id: listingId, isActive: true },
   });
+
   if (!isExistListing) {
-    throw new AppError(StatusCodes.NOT_FOUND, "listing not found");
+    throw new AppError(StatusCodes.NOT_FOUND, "Listing not available");
   }
-  if (isExistListing.isActive === false) {
-    throw new AppError(StatusCodes.NOT_FOUND, "listing not  aviable now ");
-  }
-
-  const totalamount = isExistListing.price * payload.groupSize;
-  console.log(totalamount);
-
-  const bookingData = {
-    startDate: payload.startDate,
-    endDate: payload.endDate,
-    listingId: listingId,
-    guideId: payload.guideId,
-    groupSize: payload.groupSize,
-    touristId: user.userId,
-    totalAmount: totalamount,
-    paymentStatus: PaymentStatus.UNPAID,
-  };
-  await prisma.listing.update({
+  const tourist = await prisma.user.findUnique({
     where: {
-      id: listingId,
+      id: user.userId,
     },
-    data: {
-      bookingCount: {
-        increment: 1,
+  });
+  if (!tourist) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Tourist not found");
+  }
+
+  if (!tourist.phone) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      " phone number is missing! please update your profile",
+    );
+  }
+  if (!tourist.presentAddress || !tourist.parmanentAddress) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      " address is missing! please update your profile",
+    );
+  }
+
+  const totalAmount = isExistListing.price * payload.groupSize;
+  const transactionId = uuid();
+
+  const result = await prisma.$transaction(async (tx) => {
+    // ✅ 1️⃣ Create Booking
+    const booking = await tx.booking.create({
+      data: {
+        startDate: payload.startDate,
+        endDate: payload.endDate,
+        listingId,
+        guideId: payload.guideId,
+        groupSize: payload.groupSize,
+        touristId: user.userId,
+        totalAmount,
+        paymentStatus: PaymentStatus.UNPAID,
       },
-    },
+    });
+
+    // ✅ 2️⃣ Create Payment (UNPAID)
+    const payment = await tx.payment.create({
+      data: {
+        bookingId: booking.id,
+        transactionId,
+        amount: booking.totalAmount,
+        status: PaymentStatus.UNPAID,
+      },
+    });
+
+    // ✅ 3️⃣ Update listing booking count
+    await tx.listing.update({
+      where: { id: listingId },
+      data: {
+        bookingCount: { increment: 1 },
+      },
+    });
+
+    return {
+      booking,
+      payment,
+    };
   });
-  const createBooking = await prisma.booking.create({
-    data: bookingData,
-  });
-  return createBooking;
+
+  return result;
 };
 
 const getAllBooking = async (option: IPagination) => {
@@ -119,7 +153,7 @@ const confrimBooking = async (
   bookingId: string,
   payload: {
     status: "CENCELLED" | "CONFRIMED";
-  }
+  },
 ) => {
   const isExistBooking = await prisma.booking.findUnique({
     where: { id: bookingId },
@@ -134,7 +168,7 @@ const confrimBooking = async (
   ) {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
-      "This booking is already canceled"
+      "This booking is already canceled",
     );
   }
   if (
@@ -143,7 +177,7 @@ const confrimBooking = async (
   ) {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
-      "This booking is already confirmed"
+      "This booking is already confirmed",
     );
   }
   const updateBooking = await prisma.booking.update({

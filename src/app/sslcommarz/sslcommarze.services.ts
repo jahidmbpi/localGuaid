@@ -11,8 +11,8 @@ const paymentInit = async (payload: ISslcomarz) => {
       store_passwd: envVars.SSL.SSL_STORE_PASS,
       total_amount: payload.amount,
       currency: "BDT",
-      tran_id: payload.transectionId,
-      success_url: `${envVars.SSL.SSL_SUCCESS_BACKEND_URL}?transactionId=${payload.transectionId}`,
+      tran_id: payload.transactionId,
+      success_url: `${envVars.SSL.SSL_SUCCESS_BACKEND_URL}?transactionId=${payload.transactionId}`,
       fail_url: envVars.SSL.SSL_FAIL_BACKEND_URL,
       cancel_url: envVars.SSL.SSL_CANCEL_BACKEND_URL,
       shipping_method: "N/A",
@@ -46,7 +46,7 @@ const paymentInit = async (payload: ISslcomarz) => {
 
     return response.data;
   } catch (error: any) {
-    console.log(error);
+    console.log("error from axious", error);
     throw new AppError(
       StatusCodes.BAD_REQUEST,
       error?.message || String(error),

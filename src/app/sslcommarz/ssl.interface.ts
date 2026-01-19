@@ -1,6 +1,6 @@
 export interface ISslcomarz {
   amount: number;
-  transectionId: string;
+  transactionId: string;
   name: string;
   email: string;
   phoneNumber: string;
