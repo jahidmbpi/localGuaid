@@ -6,9 +6,11 @@ let server: Server;
 
 const startServer = () => {
   try {
-    app.listen(envVars.PORT, () => {
-      console.log(`🚀 Server running at http://localhost:${envVars.PORT}`);
-    });
+    if (envVars.NODE_ENV !== "production") {
+      app.listen(envVars.PORT, () => {
+        console.log(`🚀 Server running at http://localhost:${envVars.PORT}`);
+      });
+    }
   } catch (error) {
     console.log(error);
   }
