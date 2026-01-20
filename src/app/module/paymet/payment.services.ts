@@ -53,8 +53,10 @@ const paymentinit = async (bookingId: string) => {
     address: turist.presentAddress || "",
   };
   const sslpayment = await sslService.paymentInit(ssldata);
-  console.log(sslpayment);
-  return sslpayment;
+
+  return {
+    paymentUrl: sslpayment.GatewayPageURL,
+  };
 };
 
 const success = async () => {

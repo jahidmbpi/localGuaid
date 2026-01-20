@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 interface ENVconfig {
   PORT: string;
+  NODE_ENV: string;
   CLOUDENARY_NAME: string;
   CLOUDENARY_API_KEY: string;
   CLOUDENARY_API_SECRET: string;
@@ -41,6 +42,7 @@ const loadEnvVariable = (): ENVconfig => {
     "SSL_SUCCESS_BACKEND_URL",
     "SSL_FAIL_BACKEND_URL",
     "SSL_CANCEL_BACKEND_URL",
+    "NODE_ENV",
   ];
   requireVariable.forEach((key) => {
     if (!process.env[key]) {
@@ -50,6 +52,7 @@ const loadEnvVariable = (): ENVconfig => {
 
   return {
     PORT: process.env.PORT as string,
+    NODE_ENV: process.env.NODE_ENV as string,
     CLOUDENARY_NAME: process.env.CLOUDENARY_NAME as string,
     CLOUDENARY_API_KEY: process.env.CLOUDENARY_API_KEY as string,
     CLOUDENARY_API_SECRET: process.env.CLOUDENARY_API_SECRET as string,
