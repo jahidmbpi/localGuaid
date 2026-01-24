@@ -17,16 +17,18 @@ const paymentInit = catchAsync(async (req: Request, res: Response) => {
 });
 
 const successpayment = catchAsync(async (req: Request, res: Response) => {
-  const result = await paymentServices.success();
+  const transectionId = String(req.query.transactionId);
+  const result = await paymentServices.success(transectionId);
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.CREATED,
-    message: " all listing retrived success",
+    message: "payment successfuly",
     data: result,
   });
 });
 const fail = catchAsync(async (req: Request, res: Response) => {
-  const result = await paymentServices.fail();
+  const transectionId = String(req.query.transactionId);
+  const result = await paymentServices.fail(transectionId);
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.CREATED,
@@ -35,7 +37,8 @@ const fail = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const cencel = catchAsync(async (req: Request, res: Response) => {
-  const result = await paymentServices.cencel();
+  const transectionId = String(req.query.transactionId);
+  const result = await paymentServices.cencel(transectionId);
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.CREATED,
