@@ -10,7 +10,7 @@ app.use(
   cors({
     origin: ["http://localhost:3000", envVars.FRONTEND_URL],
     credentials: true,
-  })
+  }),
 );
 app.use(Express.json());
 app.use(Express.urlencoded({ extended: true }));
@@ -19,7 +19,8 @@ app.use("/api/v1", router);
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
-    message: "Welcome to Tour Guide",
+    message:
+      "Welcome to  LocalGuide web platfrom, this platfrom for only turust and local guid",
   });
 });
 
