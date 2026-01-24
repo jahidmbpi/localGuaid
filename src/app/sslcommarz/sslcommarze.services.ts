@@ -54,6 +54,28 @@ const paymentInit = async (payload: ISslcomarz) => {
   }
 };
 
+const validatePyment = async (val_id: string) => {
+  try {
+    const response = await axios({
+      method: "GET",
+      url: envVars.SSL.SSL_VALIDATION_API,
+      params: {
+        val_id: val_id,
+        store_id: envVars.SSL.SSL_STORE_ID,
+        store_passwd: envVars.SSL.SSL_STORE_PASS,
+        format: "json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "SSL payment validation failed",
+    );
+  }
+};
+
 export const sslService = {
   paymentInit,
+  validatePyment,
 };

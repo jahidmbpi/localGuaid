@@ -18,7 +18,10 @@ const paymentInit = catchAsync(async (req: Request, res: Response) => {
 
 const successpayment = catchAsync(async (req: Request, res: Response) => {
   const transectionId = String(req.query.transactionId);
-  const result = await paymentServices.success(transectionId);
+  const valId = req.body.val_id;
+  console.log(valId, "this is validate id from ssl");
+
+  const result = await paymentServices.success(transectionId, valId);
   sendResponse(res, {
     success: true,
     statusCode: StatusCodes.CREATED,

@@ -60,9 +60,11 @@ const paymentinit = async (bookingId: string) => {
   };
 };
 
-const success = async (transactionId: string) => {
+const success = async (transactionId: string, validId: string) => {
   console.log("this is success");
   console.log(transactionId);
+  const validateresponse = await sslService.validatePyment(validId);
+  console.log(validateresponse, "validate response from services");
 
   const payment = await prisma.payment.findFirst({
     where: {
