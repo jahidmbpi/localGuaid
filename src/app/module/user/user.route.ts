@@ -4,7 +4,7 @@ import { userController } from "./user.controllers";
 import { Router } from "express";
 import { multerUpload } from "../../config/multer.config";
 import validateRequest from "../../sheard/validation";
-import { createUserZodSchema } from "./validation";
+import { createUserZodSchema, updateUserZodSchema } from "./validation";
 
 const router = Router();
 
@@ -12,19 +12,20 @@ router.post(
   "/create",
   multerUpload.single("file"),
   validateRequest(createUserZodSchema),
-  userController.createUser
+  userController.createUser,
 );
 router.get("/getalluser", cheakAuth(Role.ADMIN), userController.getAllUser);
 router.get(
   "/:id",
   cheakAuth(...Object.values(Role)),
-  userController.getUserById
+  userController.getUserById,
 );
 router.patch(
-  "/:id",
-  multerUpload.single("file"),
+  "/update/:id",
   cheakAuth(...Object.values(Role)),
-  userController.updateUserById
+  multerUpload.single("file"),
+  validateRequest(updateUserZodSchema),
+  userController.updateUserById,
 );
 
 export const userRouter = router;

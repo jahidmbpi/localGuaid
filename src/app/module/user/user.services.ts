@@ -1,12 +1,10 @@
-import { email } from "zod";
 import { Request } from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "../../config/prisma";
 import { Role } from "@prisma/client";
 import AppError from "../../helper/appError";
 import { StatusCodes } from "http-status-codes";
-import { JwtPayload } from "jsonwebtoken";
-import { File } from "buffer";
+
 const createUser = async (req: Request) => {
   const data = req.body;
   const image = req.file;
@@ -23,13 +21,12 @@ const createUser = async (req: Request) => {
   if (IsexsitUser) {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
-      "this user already exist, please login with email and password"
+      "this user already exist, please login with email and password",
     );
   }
 
   const plainPassword = data.password;
   const hashedPassword = await bcrypt.hash(plainPassword, 10);
-  console.log(hashedPassword);
 
   const userData = {
     ...data,
@@ -59,8 +56,6 @@ const updateUserById = async (req: Request) => {
   const user = req.user;
   const payload = req.body;
   const file = req.file;
-  console.log("this is user from req", user);
-
   if (file) {
     payload.profilePhoto = file.path;
   }
@@ -75,18 +70,18 @@ const updateUserById = async (req: Request) => {
   if (isexsitUser.isDeleted) {
     throw new AppError(
       StatusCodes.NOT_FOUND,
-      "this user already deleted,please constact authority"
+      "this user already deleted,please constact authority",
     );
   }
   if (isexsitUser.status === "BLOCK" || isexsitUser.status === "INACTIVE") {
     throw new AppError(
       StatusCodes.FORBIDDEN,
-      "This user is blocked or inactive. Please contact authority."
+      "This user is blocked or inactive. Please contact authority.",
     );
   }
 
-  if (isexsitUser.role! === user.role) {
-    throw new AppError(StatusCodes.UNAUTHORIZED, "you are not authorized");
+  if (isexsitUser.role !== user.role) {
+    throw new AppError(StatusCodes.UNAUTHORIZED, "you are not authorized fff");
   }
   const result = await prisma.user.update({
     where: {
@@ -116,7 +111,7 @@ const getUserById = async (id: string) => {
   if (user.status === "BLOCK" || user.status === "INACTIVE") {
     throw new AppError(
       403,
-      "This user is blocked or inactive, please contact authority"
+      "This user is blocked or inactive, please contact authority",
     );
   }
 
