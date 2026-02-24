@@ -1,5 +1,5 @@
 import { email } from "zod";
-import { GuideInfo, Role } from "@prisma/client";
+import { GuideInfo, Prisma, Role } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../../config/prisma";
 import AppError from "../../helper/appError";
@@ -18,7 +18,7 @@ const becomeGuaid = async (user: JwtPayload, payload: GuideInfo) => {
   if (isExistUser.role === Role.GUIDE) {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
-      "you have already guaid profile"
+      "you have already guaid profile",
     );
   }
 
@@ -65,8 +65,33 @@ const getAllPopularGuaid = async () => {
   }
   return result;
 };
+const getListingforGuaid = async (guaidId: string) => {
+  console.log(guaidId);
+  const isExsitGuaid = await prisma.user.findUnique({
+    where: {
+      id: guaidId,
+    },
+  });
+
+  console.log(isExsitGuaid);
+  if (!isExsitGuaid) {
+    throw new AppError(
+      StatusCodes.NOT_FOUND,
+      "guaid not found please try again",
+    );
+  }
+
+  const result = await prisma.listing.findMany({
+    where: {
+      guideId: guaidId,
+    },
+  });
+
+  return result;
+};
 
 export const guaidServices = {
   becomeGuaid,
   getAllPopularGuaid,
+  getListingforGuaid,
 };

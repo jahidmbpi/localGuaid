@@ -12,9 +12,12 @@ export const createUserZodSchema = z.object({
 
 export const updateUserZodSchema = z.object({
   name: z.string().optional(),
-  email: z.string().email("Invalid email").optional(),
+  email: z.string().email().optional().or(z.literal("")),
   password: z.string().optional(),
   role: z.nativeEnum(Role).optional(),
   bio: z.string().optional(),
   language: z.array(z.string()).optional(),
+  presentAddress: z.string().optional(),
+  parmanentAddress: z.string().optional(),
+  phone: z.string().optional(),
 });

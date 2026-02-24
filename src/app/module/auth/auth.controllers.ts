@@ -3,7 +3,6 @@ import catchAsync from "../../sheard/catchAsync";
 import sendResponse from "../../sheard/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import { authServices } from "./auth.services";
-import { setCoockie } from "../../sheard/setCoockie";
 
 const logInWithEmailAndPassword = catchAsync(
   async (req: Request, res: Response) => {
@@ -16,7 +15,7 @@ const logInWithEmailAndPassword = catchAsync(
       statusCode: StatusCodes.CREATED,
       data: result,
     });
-  }
+  },
 );
 
 const Me = catchAsync(async (req: Request, res: Response) => {

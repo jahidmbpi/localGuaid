@@ -7,8 +7,12 @@ const router = Router();
 router.post(
   "/become-guaid",
   cheakAuth(Role.TOURIST),
-  guaidController.becomeGuaid
+  guaidController.becomeGuaid,
 );
 router.get("/popular-guaid", guaidController.getAllPopularGuaid);
-
+router.get(
+  "/guaidlisting",
+  cheakAuth(Role.GUIDE),
+  guaidController.getListingForGuaid,
+);
 export const guaidRouter = router;

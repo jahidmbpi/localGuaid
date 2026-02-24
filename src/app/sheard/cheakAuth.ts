@@ -21,7 +21,7 @@ const cheakAuth = (...alloewedRole: Role[]) => {
 
       const verifyTocken = jwt.verify(
         accessTocken,
-        envVars.JWT_ACCESS_SECRET
+        envVars.JWT_ACCESS_SECRET,
       ) as JwtPayload;
 
       const isExsitUser = await prisma.user.findUnique({
@@ -43,7 +43,7 @@ const cheakAuth = (...alloewedRole: Role[]) => {
       ) {
         throw new AppError(
           StatusCodes.BAD_REQUEST,
-          " you are not authorized. please contact higher authority"
+          " you are not authorized. please contact higher authority",
         );
       }
 

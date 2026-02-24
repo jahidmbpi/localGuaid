@@ -13,21 +13,25 @@ router.post(
   multerUpload.array("files"),
   validateRequest(createListingSchema),
   cheakAuth(Role.GUIDE),
-  listingContorller.createListing
+  listingContorller.createListing,
 );
 
 router.get(
   "/getALlListing",
   // cheakAuth(...Object.values(Role)),
-  listingContorller.getAllListing
+  listingContorller.getAllListing,
 );
 router.get("/popular", listingContorller.popularListing);
-
+router.get(
+  "/:id",
+  cheakAuth(...Object.values(Role)),
+  listingContorller.getListingById,
+);
 router.patch(
   "/:id",
   validateRequest(updateListingSchema),
   cheakAuth(Role.GUIDE),
-  listingContorller.UpdateListing
+  listingContorller.UpdateListing,
 );
 router.delete("/:id", cheakAuth(Role.GUIDE), listingContorller.deleteListing);
 export const listingRouter = router;

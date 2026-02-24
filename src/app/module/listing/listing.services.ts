@@ -10,7 +10,7 @@ import { searchAbleField } from "./listing.constant";
 const createListing = async (
   user: JwtPayload,
   payload: Listing,
-  files: Express.Multer.File[]
+  files: Express.Multer.File[],
 ) => {
   if (!user?.userId) {
     throw new AppError(401, "Unauthorized");
@@ -85,7 +85,7 @@ const getAllLising = async (filter: any, option: IPagination) => {
 const UpdateListing = async (
   paylod: Partial<Listing>,
   listingId: string,
-  user: JwtPayload
+  user: JwtPayload,
 ) => {
   const isExistListing = await prisma.listing.findFirst({
     where: {
@@ -106,7 +106,7 @@ const UpdateListing = async (
   if (user.role !== Role.GUIDE) {
     throw new AppError(
       StatusCodes.FORBIDDEN,
-      "Only guides can create a listing"
+      "Only guides can create a listing",
     );
   }
 
@@ -121,7 +121,7 @@ const UpdateListing = async (
   if (isExistGuid.role !== user.role) {
     throw new AppError(
       StatusCodes.UNAUTHORIZED,
-      "you are not authorized for this route"
+      "you are not authorized for this route",
     );
   }
 
@@ -152,7 +152,7 @@ const deleteListing = async (lisTingId: string, user: JwtPayload) => {
   if (isExistListing.guideId !== user.UserId) {
     throw new AppError(
       StatusCodes.UNAUTHORIZED,
-      "you are not permited for this route"
+      "you are not permited for this route",
     );
   }
   const deleteListing = await prisma.listing.delete({
@@ -178,10 +178,32 @@ const popolarListing = async () => {
   return result;
 };
 
+const getListingById = async (id: string) => {
+  const isExistListing = await prisma.listing.findUnique({
+    where: {
+      id,
+      isActive: true,
+    },
+  });
+  if (!isExistListing) {
+    throw new AppError(StatusCodes.NOT_FOUND, "listing not found ");
+  }
+  const result = await prisma.listing.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      guide: true,
+    },
+  });
+  return result;
+};
+
 export const listingServices = {
   createListing,
   UpdateListing,
   deleteListing,
   getAllLising,
   popolarListing,
+  getListingById,
 };

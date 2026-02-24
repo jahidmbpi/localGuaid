@@ -26,7 +26,21 @@ const getAllPopularGuaid = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getListingForGuaid = catchAsync(async (req: Request, res: Response) => {
+  const guaidId = req.user.userId;
+  console.log(guaidId);
+  const result = await guaidServices.getListingforGuaid(guaidId);
+
+  sendResponse(res, {
+    success: true,
+    message: "listing retrived success for guaid",
+    statusCode: StatusCodes.OK,
+    data: result,
+  });
+});
+
 export const guaidController = {
   becomeGuaid,
   getAllPopularGuaid,
+  getListingForGuaid,
 };

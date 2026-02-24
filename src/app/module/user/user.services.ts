@@ -55,6 +55,8 @@ const updateUserById = async (req: Request) => {
   const id = req.params.id;
   const user = req.user;
   const payload = req.body;
+
+  console.log(payload, "payload");
   const file = req.file;
   if (file) {
     payload.profilePhoto = file.path;

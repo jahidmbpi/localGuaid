@@ -71,10 +71,22 @@ const popularListing = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const getListingById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await listingServices.getListingById(id);
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: "listing retrived success",
+    data: result,
+  });
+});
 export const listingContorller = {
   createListing,
   UpdateListing,
   deleteListing,
   getAllListing,
   popularListing,
+  getListingById,
 };
