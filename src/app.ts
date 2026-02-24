@@ -3,6 +3,7 @@ import router from "./app/route";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { envVars } from "./app/config/env";
+import { globalErrorhandelar } from "./app/middleware/globalErrorHandler";
 
 const app = Express();
 
@@ -24,4 +25,5 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
+app.use(globalErrorhandelar);
 export default app;
