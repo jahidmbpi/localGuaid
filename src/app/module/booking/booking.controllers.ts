@@ -43,11 +43,14 @@ const myBooking = catchAsync(async (req: Request, res: Response) => {
 
 const confrimBooking = catchAsync(async (req: Request, res: Response) => {
   const bookingId = req.params.id;
+  const payload = req.body;
+  console.log(payload);
+  const result = await bookingServices.confrimBooking(bookingId, payload);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
     message: "booking confrimed success",
-    data: "",
+    data: result,
   });
 });
 

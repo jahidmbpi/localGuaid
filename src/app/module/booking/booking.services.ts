@@ -137,6 +137,9 @@ const myBooking = async (id: string, option: IPagination) => {
     orderBy: {
       [sortBy]: sortOrder,
     },
+    // include: {
+    //   guide: true,
+    // },
   });
   const total = await prisma.booking.count();
   return {
@@ -152,9 +155,10 @@ const myBooking = async (id: string, option: IPagination) => {
 const confrimBooking = async (
   bookingId: string,
   payload: {
-    status: "CENCELLED" | "CONFRIMED";
+    status: "CANCELLED" | "CONFIRMED";
   },
 ) => {
+  console.log(bookingId, payload, "yhisnsnsn");
   const isExistBooking = await prisma.booking.findUnique({
     where: { id: bookingId },
   });
@@ -163,8 +167,8 @@ const confrimBooking = async (
     throw new AppError(StatusCodes.NOT_FOUND, "Booking not found");
   }
   if (
-    isExistBooking.status === BookingStatus.CENCELLED &&
-    payload.status === "CENCELLED"
+    isExistBooking.status === BookingStatus.CANCELLED &&
+    payload.status === "CANCELLED"
   ) {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
@@ -172,8 +176,8 @@ const confrimBooking = async (
     );
   }
   if (
-    isExistBooking.status === BookingStatus.CONFRIMED &&
-    payload.status === "CONFRIMED"
+    isExistBooking.status === BookingStatus.CONFIRMED &&
+    payload.status === "CONFIRMED"
   ) {
     throw new AppError(
       StatusCodes.BAD_REQUEST,
