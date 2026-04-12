@@ -219,10 +219,40 @@ const turistBooking = async (id: string, option: IPagination) => {
     data: reult,
   };
 };
+
+const upcimingBooking = async (id: string) => {
+  const isExistUser = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!isExistUser) {
+    throw new AppError(StatusCodes.NOT_FOUND, "user not found");
+  }
+  if (isExistUser.role !== "GUIDE") {
+    throw new AppError(
+      StatusCodes.BAD_REQUEST,
+      "you are not permitted for this route",
+    );
+  }
+  const upcommingBookingforGuaid = await prisma.booking.findMany({
+    where: {
+      guideId: id,
+      status: BookingStatus.CONFIRMED,
+    },
+  });
+
+  if (!upcommingBookingforGuaid) {
+    throw new AppError(StatusCodes.NOT_FOUND, "no upcomming booking found");
+  }
+  return upcommingBookingforGuaid;
+};
 export const bookingServices = {
   createBooking,
   getAllBooking,
   myBooking,
   confrimBooking,
   turistBooking,
+  upcimingBooking,
 };

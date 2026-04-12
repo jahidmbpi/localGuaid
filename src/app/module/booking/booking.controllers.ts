@@ -24,7 +24,7 @@ const getALlbooking = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     message: "all booking retrived succsess",
-    statusCode: StatusCodes.CREATED,
+    statusCode: StatusCodes.OK,
     data: result,
   });
 });
@@ -36,7 +36,7 @@ const myBooking = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     message: "my booking retrived success",
-    statusCode: StatusCodes.CREATED,
+    statusCode: StatusCodes.OK,
     data: result,
   });
 });
@@ -61,7 +61,18 @@ const turistBooking = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     message: "turist booking retrived success",
-    statusCode: StatusCodes.CREATED,
+    statusCode: StatusCodes.OK,
+    data: result,
+  });
+});
+
+const upcomingBokking = catchAsync(async (req: Request, res: Response) => {
+  const id = req.user.userId;
+  const result = await bookingServices.upcimingBooking(id);
+  sendResponse(res, {
+    success: true,
+    message: "guaid confrimed booking retrived success",
+    statusCode: StatusCodes.OK,
     data: result,
   });
 });
@@ -72,4 +83,5 @@ export const bookingController = {
   myBooking,
   confrimBooking,
   turistBooking,
+  upcomingBokking,
 };

@@ -23,7 +23,11 @@ router.get(
   cheakAuth(Role.TOURIST),
   bookingController.turistBooking,
 );
-
+router.get(
+  "/upcoming",
+  cheakAuth(Role.GUIDE),
+  bookingController.upcomingBokking,
+);
 router.patch(
   "/:id",
   cheakAuth(Role.GUIDE),
