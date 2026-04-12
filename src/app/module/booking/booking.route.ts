@@ -32,7 +32,7 @@ router.patch(
   "/:id",
   cheakAuth(Role.GUIDE),
   validateRequest(createBookingSchema),
-  bookingController.confrimBooking,
+  bookingController.updateBooking,
 );
 
 export const bookingRouter = router;

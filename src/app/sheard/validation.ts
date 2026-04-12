@@ -14,7 +14,7 @@ const validateRequest =
         body = JSON.parse(body);
       }
       req.body = await zodSchema.parseAsync(body);
-      console.log(req.body, "hello");
+
       next();
     } catch (error) {
       next(error);

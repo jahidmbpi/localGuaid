@@ -152,13 +152,13 @@ const myBooking = async (id: string, option: IPagination) => {
   };
 };
 
-const confrimBooking = async (
+const updateBooking = async (
   bookingId: string,
   payload: {
     status: "CANCELLED" | "CONFIRMED";
   },
 ) => {
-  console.log(bookingId, payload, "yhisnsnsn");
+  console.log(payload, "this console from payload");
   const isExistBooking = await prisma.booking.findUnique({
     where: { id: bookingId },
   });
@@ -184,7 +184,7 @@ const confrimBooking = async (
       "This booking is already confirmed",
     );
   }
-  const updateBooking = await prisma.booking.update({
+  const updated = await prisma.booking.update({
     where: {
       id: bookingId,
     },
@@ -192,7 +192,7 @@ const confrimBooking = async (
       status: payload.status as BookingStatus,
     },
   });
-  return updateBooking;
+  return updated;
 };
 
 const turistBooking = async (id: string, option: IPagination) => {
@@ -252,7 +252,7 @@ export const bookingServices = {
   createBooking,
   getAllBooking,
   myBooking,
-  confrimBooking,
+  updateBooking,
   turistBooking,
   upcimingBooking,
 };
