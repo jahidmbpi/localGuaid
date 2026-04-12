@@ -27,8 +27,8 @@ const paymentInit = (payload) => __awaiter(void 0, void 0, void 0, function* () 
             currency: "BDT",
             tran_id: payload.transactionId,
             success_url: `${env_1.envVars.SSL.SSL_SUCCESS_BACKEND_URL}?transactionId=${payload.transactionId}`,
-            fail_url: env_1.envVars.SSL.SSL_FAIL_BACKEND_URL,
-            cancel_url: env_1.envVars.SSL.SSL_CANCEL_BACKEND_URL,
+            fail_url: `${env_1.envVars.SSL.SSL_FAIL_BACKEND_URL}?transactionId=${payload.transactionId}`,
+            cancel_url: `${env_1.envVars.SSL.SSL_CANCEL_BACKEND_URL}?transactionId=${payload.transactionId}`,
             shipping_method: "N/A",
             product_name: "Appointment",
             product_category: "Tour",
@@ -63,6 +63,25 @@ const paymentInit = (payload) => __awaiter(void 0, void 0, void 0, function* () 
         throw new appError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, (error === null || error === void 0 ? void 0 : error.message) || String(error));
     }
 });
+const validatePyment = (val_id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield (0, axios_1.default)({
+            method: "GET",
+            url: env_1.envVars.SSL.SSL_VALIDATION_API,
+            params: {
+                val_id: val_id,
+                store_id: env_1.envVars.SSL.SSL_STORE_ID,
+                store_passwd: env_1.envVars.SSL.SSL_STORE_PASS,
+                format: "json",
+            },
+        });
+        return response.data;
+    }
+    catch (error) {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "SSL payment validation failed");
+    }
+});
 exports.sslService = {
     paymentInit,
+    validatePyment,
 };

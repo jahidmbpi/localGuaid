@@ -13,12 +13,14 @@ const validateRequest = (zodSchema) => (req, res, next) => __awaiter(void 0, voi
     var _a;
     try {
         let body = ((_a = req.body) === null || _a === void 0 ? void 0 : _a.data) || req.body;
+        if (!req.body) {
+            throw new Error("Request body is missing");
+        }
+        console.log(body);
         if (typeof body === "string") {
             body = JSON.parse(body);
         }
-        const parse = yield zodSchema.parseAsync(body);
-        req.body = parse;
-        console.log("console from validate", req.body);
+        req.body = yield zodSchema.parseAsync(body);
         next();
     }
     catch (error) {

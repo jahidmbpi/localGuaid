@@ -1,26 +1,24 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUserZodSchema = void 0;
+exports.updateUserZodSchema = exports.createUserZodSchema = void 0;
 const client_1 = require("@prisma/client");
-const zod_1 = __importDefault(require("zod"));
-exports.createUserZodSchema = zod_1.default.object({
-    name: zod_1.default.string(),
-    email: zod_1.default.string({ error: "email is required" }).email(),
-    password: zod_1.default.string({ error: "password is required" }),
-    role: zod_1.default.string().optional().default(client_1.Role.TOURIST),
-    bio: zod_1.default.string().optional(),
-    profilePhoto: zod_1.default.string().optional(),
-    language: zod_1.default.array(zod_1.default.string()).optional(),
+const zod_1 = require("zod");
+exports.createUserZodSchema = zod_1.z.object({
+    name: zod_1.z.string().min(1, "Name is required"),
+    email: zod_1.z.string().email("Invalid email"),
+    password: zod_1.z.string().min(6, "Password must be at least 6 characters"),
+    role: zod_1.z.nativeEnum(client_1.Role).optional().default(client_1.Role.TOURIST),
+    bio: zod_1.z.string().optional(),
+    language: zod_1.z.array(zod_1.z.string()).optional(),
 });
-const updateUserZodSchema = zod_1.default.object({
-    name: zod_1.default.string().optional(),
-    email: zod_1.default.string().email().optional(),
-    password: zod_1.default.string().optional(),
-    role: zod_1.default.string().optional().optional,
-    bio: zod_1.default.string().optional(),
-    profilePhoto: zod_1.default.string().optional(),
-    language: zod_1.default.array(zod_1.default.string()).optional(),
+exports.updateUserZodSchema = zod_1.z.object({
+    name: zod_1.z.string().optional(),
+    email: zod_1.z.string().email().optional().or(zod_1.z.literal("")),
+    password: zod_1.z.string().optional(),
+    role: zod_1.z.nativeEnum(client_1.Role).optional(),
+    bio: zod_1.z.string().optional(),
+    language: zod_1.z.array(zod_1.z.string()).optional(),
+    presentAddress: zod_1.z.string().optional(),
+    parmanentAddress: zod_1.z.string().optional(),
+    phone: zod_1.z.string().optional(),
 });

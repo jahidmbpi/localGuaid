@@ -67,7 +67,26 @@ const getAllPopularGuaid = () => __awaiter(void 0, void 0, void 0, function* () 
     }
     return result;
 });
+const getListingforGuaid = (guaidId) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(guaidId);
+    const isExsitGuaid = yield prisma_1.prisma.user.findUnique({
+        where: {
+            id: guaidId,
+        },
+    });
+    console.log(isExsitGuaid);
+    if (!isExsitGuaid) {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "guaid not found please try again");
+    }
+    const result = yield prisma_1.prisma.listing.findMany({
+        where: {
+            guideId: guaidId,
+        },
+    });
+    return result;
+});
 exports.guaidServices = {
     becomeGuaid,
     getAllPopularGuaid,
+    getListingforGuaid,
 };

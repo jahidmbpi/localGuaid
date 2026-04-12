@@ -155,7 +155,7 @@ const myBooking = async (id: string, option: IPagination) => {
 const updateBooking = async (
   bookingId: string,
   payload: {
-    status: "CANCELLED" | "CONFIRMED";
+    status: "CANCELLED" | "CONFIRMED" | "COMPLETED";
   },
 ) => {
   console.log(payload, "this console from payload");

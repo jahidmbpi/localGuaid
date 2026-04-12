@@ -37,7 +37,19 @@ const getAllPopularGuaid = (0, catchAsync_1.default)((req, res) => __awaiter(voi
         data: result,
     });
 }));
+const getListingForGuaid = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const guaidId = req.user.userId;
+    console.log(guaidId);
+    const result = yield guaid_services_1.guaidServices.getListingforGuaid(guaidId);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        message: "listing retrived success for guaid",
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        data: result,
+    });
+}));
 exports.guaidController = {
     becomeGuaid,
     getAllPopularGuaid,
+    getListingForGuaid,
 };

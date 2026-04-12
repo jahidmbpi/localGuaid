@@ -17,6 +17,7 @@ router.get("/getALlListing",
 // cheakAuth(...Object.values(Role)),
 listing_controllers_1.listingContorller.getAllListing);
 router.get("/popular", listing_controllers_1.listingContorller.popularListing);
+router.get("/:id", (0, cheakAuth_1.default)(...Object.values(client_1.Role)), listing_controllers_1.listingContorller.getListingById);
 router.patch("/:id", (0, validation_1.default)(listing_validation_1.updateListingSchema), (0, cheakAuth_1.default)(client_1.Role.GUIDE), listing_controllers_1.listingContorller.UpdateListing);
 router.delete("/:id", (0, cheakAuth_1.default)(client_1.Role.GUIDE), listing_controllers_1.listingContorller.deleteListing);
 exports.listingRouter = router;

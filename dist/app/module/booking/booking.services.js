@@ -120,6 +120,9 @@ const myBooking = (id, option) => __awaiter(void 0, void 0, void 0, function* ()
         orderBy: {
             [sortBy]: sortOrder,
         },
+        // include: {
+        //   guide: true,
+        // },
     });
     const total = yield prisma_1.prisma.booking.count();
     return {
@@ -131,22 +134,23 @@ const myBooking = (id, option) => __awaiter(void 0, void 0, void 0, function* ()
         data: reult,
     };
 });
-const confrimBooking = (bookingId, payload) => __awaiter(void 0, void 0, void 0, function* () {
+const updateBooking = (bookingId, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(payload, "this console from payload");
     const isExistBooking = yield prisma_1.prisma.booking.findUnique({
         where: { id: bookingId },
     });
     if (!isExistBooking) {
         throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Booking not found");
     }
-    if (isExistBooking.status === client_1.BookingStatus.CENCELLED &&
-        payload.status === "CENCELLED") {
+    if (isExistBooking.status === client_1.BookingStatus.CANCELLED &&
+        payload.status === "CANCELLED") {
         throw new appError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "This booking is already canceled");
     }
-    if (isExistBooking.status === client_1.BookingStatus.CONFRIMED &&
-        payload.status === "CONFRIMED") {
+    if (isExistBooking.status === client_1.BookingStatus.CONFIRMED &&
+        payload.status === "CONFIRMED") {
         throw new appError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "This booking is already confirmed");
     }
-    const updateBooking = yield prisma_1.prisma.booking.update({
+    const updated = yield prisma_1.prisma.booking.update({
         where: {
             id: bookingId,
         },
@@ -154,7 +158,7 @@ const confrimBooking = (bookingId, payload) => __awaiter(void 0, void 0, void 0,
             status: payload.status,
         },
     });
-    return updateBooking;
+    return updated;
 });
 const turistBooking = (id, option) => __awaiter(void 0, void 0, void 0, function* () {
     const { page, limit, skip, sortBy, sortOrder } = (0, calculatePagination_1.default)(option);
@@ -178,10 +182,34 @@ const turistBooking = (id, option) => __awaiter(void 0, void 0, void 0, function
         data: reult,
     };
 });
+const upcimingBooking = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExistUser = yield prisma_1.prisma.user.findUnique({
+        where: {
+            id,
+        },
+    });
+    if (!isExistUser) {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "user not found");
+    }
+    if (isExistUser.role !== "GUIDE") {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "you are not permitted for this route");
+    }
+    const upcommingBookingforGuaid = yield prisma_1.prisma.booking.findMany({
+        where: {
+            guideId: id,
+            status: client_1.BookingStatus.CONFIRMED,
+        },
+    });
+    if (!upcommingBookingforGuaid) {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "no upcomming booking found");
+    }
+    return upcommingBookingforGuaid;
+});
 exports.bookingServices = {
     createBooking,
     getAllBooking,
     myBooking,
-    confrimBooking,
+    updateBooking,
     turistBooking,
+    upcimingBooking,
 };

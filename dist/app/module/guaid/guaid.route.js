@@ -11,4 +11,5 @@ const client_1 = require("@prisma/client");
 const router = (0, express_1.Router)();
 router.post("/become-guaid", (0, cheakAuth_1.default)(client_1.Role.TOURIST), guaid_controllers_1.guaidController.becomeGuaid);
 router.get("/popular-guaid", guaid_controllers_1.guaidController.getAllPopularGuaid);
+router.get("/guaidlisting", (0, cheakAuth_1.default)(client_1.Role.GUIDE), guaid_controllers_1.guaidController.getListingForGuaid);
 exports.guaidRouter = router;

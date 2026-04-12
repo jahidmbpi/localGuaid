@@ -28,16 +28,20 @@ const paymentInit = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
     });
 }));
 const successpayment = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield payment_services_1.paymentServices.success();
+    const transectionId = String(req.query.transactionId);
+    const valId = req.body.val_id;
+    console.log(valId, "this is validate id from ssl");
+    const result = yield payment_services_1.paymentServices.success(transectionId, valId);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.CREATED,
-        message: " all listing retrived success",
+        message: "payment successfuly",
         data: result,
     });
 }));
 const fail = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield payment_services_1.paymentServices.fail();
+    const transectionId = String(req.query.transactionId);
+    const result = yield payment_services_1.paymentServices.fail(transectionId);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.CREATED,
@@ -46,7 +50,8 @@ const fail = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, v
     });
 }));
 const cencel = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield payment_services_1.paymentServices.cencel();
+    const transectionId = String(req.query.transactionId);
+    const result = yield payment_services_1.paymentServices.cencel(transectionId);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.CREATED,

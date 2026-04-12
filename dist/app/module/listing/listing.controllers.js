@@ -81,10 +81,21 @@ const popularListing = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         data: result,
     });
 }));
+const getListingById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const result = yield listing_services_1.listingServices.getListingById(id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        message: "listing retrived success",
+        data: result,
+    });
+}));
 exports.listingContorller = {
     createListing,
     UpdateListing,
     deleteListing,
     getAllListing,
     popularListing,
+    getListingById,
 };

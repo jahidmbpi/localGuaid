@@ -45,7 +45,6 @@ const createUser = (req) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const plainPassword = data.password;
     const hashedPassword = yield bcryptjs_1.default.hash(plainPassword, 10);
-    console.log(hashedPassword);
     const userData = Object.assign(Object.assign({}, data), { password: hashedPassword });
     const result = yield prisma_1.prisma.user.create({
         data: userData,
@@ -66,8 +65,8 @@ const updateUserById = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const user = req.user;
     const payload = req.body;
+    console.log(payload, "payload");
     const file = req.file;
-    console.log("this is user from req", user);
     if (file) {
         payload.profilePhoto = file.path;
     }
@@ -85,8 +84,8 @@ const updateUserById = (req) => __awaiter(void 0, void 0, void 0, function* () {
     if (isexsitUser.status === "BLOCK" || isexsitUser.status === "INACTIVE") {
         throw new appError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, "This user is blocked or inactive. Please contact authority.");
     }
-    if (isexsitUser.role === user.role) {
-        throw new appError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "you are not authorized");
+    if (isexsitUser.role !== user.role) {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "you are not authorized fff");
     }
     const result = yield prisma_1.prisma.user.update({
         where: {

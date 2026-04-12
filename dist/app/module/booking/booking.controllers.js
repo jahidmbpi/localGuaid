@@ -36,7 +36,7 @@ const getALlbooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     (0, sendResponse_1.default)(res, {
         success: true,
         message: "all booking retrived succsess",
-        statusCode: http_status_codes_1.StatusCodes.CREATED,
+        statusCode: http_status_codes_1.StatusCodes.OK,
         data: result,
     });
 }));
@@ -47,17 +47,20 @@ const myBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
     (0, sendResponse_1.default)(res, {
         success: true,
         message: "my booking retrived success",
-        statusCode: http_status_codes_1.StatusCodes.CREATED,
+        statusCode: http_status_codes_1.StatusCodes.OK,
         data: result,
     });
 }));
-const confrimBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const bookingId = req.params.id;
+    const payload = req.body;
+    console.log(payload);
+    const result = yield booking_services_1.bookingServices.updateBooking(bookingId, payload);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
-        message: "booking confrimed success",
-        data: "",
+        message: "booking updated success",
+        data: result,
     });
 }));
 const turistBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -67,7 +70,17 @@ const turistBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     (0, sendResponse_1.default)(res, {
         success: true,
         message: "turist booking retrived success",
-        statusCode: http_status_codes_1.StatusCodes.CREATED,
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        data: result,
+    });
+}));
+const upcomingBokking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.user.userId;
+    const result = yield booking_services_1.bookingServices.upcimingBooking(id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        message: "guaid confrimed booking retrived success",
+        statusCode: http_status_codes_1.StatusCodes.OK,
         data: result,
     });
 }));
@@ -75,6 +88,7 @@ exports.bookingController = {
     createBooking,
     getALlbooking,
     myBooking,
-    confrimBooking,
+    updateBooking,
     turistBooking,
+    upcomingBokking,
 };

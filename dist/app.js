@@ -8,6 +8,7 @@ const route_1 = __importDefault(require("./app/route"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const env_1 = require("./app/config/env");
+const globalErrorHandler_1 = require("./app/middleware/globalErrorHandler");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: ["http://localhost:3000", env_1.envVars.FRONTEND_URL],
@@ -19,7 +20,8 @@ app.use((0, cookie_parser_1.default)());
 app.use("/api/v1", route_1.default);
 app.get("/", (req, res) => {
     res.status(200).json({
-        message: "Welcome to Tour Guide",
+        message: "Welcome to  LocalGuide web platfrom, this platfrom for only turust and local guid",
     });
 });
+app.use(globalErrorHandler_1.globalErrorhandelar);
 exports.default = app;

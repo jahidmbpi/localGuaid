@@ -25,6 +25,7 @@ const loadEnvVariable = () => {
         "SSL_SUCCESS_BACKEND_URL",
         "SSL_FAIL_BACKEND_URL",
         "SSL_CANCEL_BACKEND_URL",
+        "NODE_ENV",
     ];
     requireVariable.forEach((key) => {
         if (!process.env[key]) {
@@ -33,6 +34,7 @@ const loadEnvVariable = () => {
     });
     return {
         PORT: process.env.PORT,
+        NODE_ENV: process.env.NODE_ENV,
         CLOUDENARY_NAME: process.env.CLOUDENARY_NAME,
         CLOUDENARY_API_KEY: process.env.CLOUDENARY_API_KEY,
         CLOUDENARY_API_SECRET: process.env.CLOUDENARY_API_SECRET,

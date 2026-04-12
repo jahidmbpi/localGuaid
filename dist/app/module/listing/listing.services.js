@@ -161,10 +161,31 @@ const popolarListing = () => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
+const getListingById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExistListing = yield prisma_1.prisma.listing.findUnique({
+        where: {
+            id,
+            isActive: true,
+        },
+    });
+    if (!isExistListing) {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "listing not found ");
+    }
+    const result = yield prisma_1.prisma.listing.findUnique({
+        where: {
+            id,
+        },
+        include: {
+            guide: true,
+        },
+    });
+    return result;
+});
 exports.listingServices = {
     createListing,
     UpdateListing,
     deleteListing,
     getAllLising,
     popolarListing,
+    getListingById,
 };

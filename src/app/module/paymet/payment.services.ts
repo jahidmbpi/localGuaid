@@ -126,7 +126,7 @@ const fail = async (transactionId: string) => {
 
     const updatedBooking = await tx.booking.update({
       where: { id: payment.bookingId },
-      data: { status: BookingStatus.CENCELLED },
+      data: { status: BookingStatus.CANCELLED },
     });
 
     return { updatedPayment, updatedBooking };
@@ -158,7 +158,7 @@ const cencel = async (transactionId: string) => {
 
     const updatedBooking = await tx.booking.update({
       where: { id: payment.bookingId },
-      data: { status: BookingStatus.CENCELLED },
+      data: { status: BookingStatus.CANCELLED },
     });
 
     return { updatedPayment, updatedBooking };

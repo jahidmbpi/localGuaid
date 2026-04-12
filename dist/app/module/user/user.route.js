@@ -15,5 +15,5 @@ const router = (0, express_1.Router)();
 router.post("/create", multer_config_1.multerUpload.single("file"), (0, validation_1.default)(validation_2.createUserZodSchema), user_controllers_1.userController.createUser);
 router.get("/getalluser", (0, cheakAuth_1.default)(client_1.Role.ADMIN), user_controllers_1.userController.getAllUser);
 router.get("/:id", (0, cheakAuth_1.default)(...Object.values(client_1.Role)), user_controllers_1.userController.getUserById);
-router.patch("/:id", multer_config_1.multerUpload.single("file"), (0, cheakAuth_1.default)(...Object.values(client_1.Role)), user_controllers_1.userController.updateUserById);
+router.patch("/update/:id", (0, cheakAuth_1.default)(...Object.values(client_1.Role)), multer_config_1.multerUpload.single("file"), (0, validation_1.default)(validation_2.updateUserZodSchema), user_controllers_1.userController.updateUserById);
 exports.userRouter = router;

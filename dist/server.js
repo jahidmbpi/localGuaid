@@ -17,9 +17,11 @@ const env_1 = require("./app/config/env");
 let server;
 const startServer = () => {
     try {
-        app_1.default.listen(env_1.envVars.PORT, () => {
-            console.log(`🚀 Server running at http://localhost:${env_1.envVars.PORT}`);
-        });
+        if (env_1.envVars.NODE_ENV !== "production") {
+            app_1.default.listen(env_1.envVars.PORT, () => {
+                console.log(`🚀 Server running at http://localhost:${env_1.envVars.PORT}`);
+            });
+        }
     }
     catch (error) {
         console.log(error);
