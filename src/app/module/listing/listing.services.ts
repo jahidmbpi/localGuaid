@@ -35,15 +35,15 @@ const getAllLising = async (filter: any, option: IPagination) => {
   const { page, limit, skip, sortBy, sortOrder } =
     calculatatePagination(option);
   console.log(page, limit, skip);
-  const { searchTarm, ...filterData } = filter;
-  console.log(searchTarm);
+  const { searchTerm, ...filterData } = filter;
+  console.log(searchTerm);
 
   const andConditon: Prisma.ListingWhereInput[] = [];
-  if (searchTarm) {
+  if (searchTerm) {
     andConditon.push({
       OR: searchAbleField.map((field) => ({
         [field]: {
-          contains: searchTarm,
+          contains: searchTerm,
           mode: "insensitive",
         },
       })),
@@ -68,6 +68,7 @@ const getAllLising = async (filter: any, option: IPagination) => {
       [sortBy]: sortOrder,
     },
   });
+  console.log(result);
 
   const total = await prisma.listing.count({
     where: whereCondition,

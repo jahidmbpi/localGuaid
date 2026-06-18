@@ -3,6 +3,7 @@ import catchAsync from "../../sheard/catchAsync";
 import { StatusCodes } from "http-status-codes";
 import sendResponse from "../../sheard/sendResponse";
 import { paymentServices } from "./payment.services";
+import { envVars } from "../../config/env";
 
 const paymentInit = catchAsync(async (req: Request, res: Response) => {
   const bookingId = req.params.id;
@@ -21,34 +22,22 @@ const successpayment = catchAsync(async (req: Request, res: Response) => {
   const valId = req.body.val_id;
   console.log(valId, "this is validate id from ssl");
 
-  const result = await paymentServices.success(transectionId, valId);
-  sendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.CREATED,
-    message: "payment successfuly",
-    data: result,
-  });
+  await paymentServices.success(transectionId, valId);
+  res.redirect(`${envVars.SSL.SSL_SUCCESS_FRONTEND_URL}?transactionId=${transectionId}`);
 });
+
 const fail = catchAsync(async (req: Request, res: Response) => {
   const transectionId = String(req.query.transactionId);
-  const result = await paymentServices.fail(transectionId);
-  sendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.CREATED,
-    message: " all listing retrived success",
-    data: result,
-  });
+  await paymentServices.fail(transectionId);
+  res.redirect(`${envVars.SSL.SSL_FAIL_FRONTEND_URL}?transactionId=${transectionId}`);
 });
+
 const cencel = catchAsync(async (req: Request, res: Response) => {
   const transectionId = String(req.query.transactionId);
-  const result = await paymentServices.cencel(transectionId);
-  sendResponse(res, {
-    success: true,
-    statusCode: StatusCodes.CREATED,
-    message: " all listing retrived success",
-    data: result,
-  });
+  await paymentServices.cencel(transectionId);
+  res.redirect(`${envVars.SSL.SSL_CANCEL_FRONTEND_URL}?transactionId=${transectionId}`);
 });
+
 export const pamentConroller = {
   paymentInit,
   successpayment,

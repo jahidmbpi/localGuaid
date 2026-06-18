@@ -4,7 +4,6 @@ export const searchAbleField = [
   "itinerary",
   "city",
   "category",
-  "price",
   "meetingPoint",
 ];
 

@@ -75,14 +75,14 @@ const updateUserById = async (req: Request) => {
       "this user already deleted,please constact authority",
     );
   }
-  if (isexsitUser.status === "BLOCK" || isexsitUser.status === "INACTIVE") {
+  if (user.role !== "ADMIN" && (isexsitUser.status === "BLOCK" || isexsitUser.status === "INACTIVE")) {
     throw new AppError(
       StatusCodes.FORBIDDEN,
       "This user is blocked or inactive. Please contact authority.",
     );
   }
 
-  if (isexsitUser.role !== user.role) {
+  if (user.role !== "ADMIN" && isexsitUser.role !== user.role) {
     throw new AppError(StatusCodes.UNAUTHORIZED, "you are not authorized fff");
   }
   const result = await prisma.user.update({

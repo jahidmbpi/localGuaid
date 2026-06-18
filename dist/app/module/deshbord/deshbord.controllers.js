@@ -12,32 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.turistController = void 0;
-const catchAsync_1 = __importDefault(require("../../sheard/catchAsync"));
+exports.deshbordController = void 0;
 const sendResponse_1 = __importDefault(require("../../sheard/sendResponse"));
 const http_status_codes_1 = require("http-status-codes");
-const turist_services_1 = require("./turist.services");
-const myBooking = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.user.userId;
-    const result = yield turist_services_1.turistServices.myBooking(id);
+const deshbord_services_1 = require("./deshbord.services");
+const catchAsync_1 = __importDefault(require("../../sheard/catchAsync"));
+const getDashboardMetaData = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield deshbord_services_1.deshbordServices.getDashboardMetaData(req.user);
     (0, sendResponse_1.default)(res, {
-        statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,
-        message: " all accepted booking retrived success",
+        message: "Dashboard metadata retrieved successfully",
+        statusCode: http_status_codes_1.StatusCodes.OK,
         data: result,
     });
 }));
-const upcomingAndPastBokkingforTurist = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.user.userId;
-    const result = yield turist_services_1.turistServices.upcomingAndPastBokkingforTurist(id);
-    (0, sendResponse_1.default)(res, {
-        statusCode: http_status_codes_1.StatusCodes.OK,
-        success: true,
-        message: " upcoming and past booking  for turist retrived success",
-        data: result,
-    });
-}));
-exports.turistController = {
-    myBooking,
-    upcomingAndPastBokkingforTurist,
+exports.deshbordController = {
+    getDashboardMetaData,
 };

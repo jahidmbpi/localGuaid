@@ -19,22 +19,22 @@ const http_status_codes_1 = require("http-status-codes");
 const sslcommarze_services_1 = require("../../sslcommarz/sslcommarze.services");
 const client_1 = require("@prisma/client");
 const paymentinit = (bookingId) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(bookingId);
+    console.log(bookingId, "from payment");
     const isExsistBokking = yield prisma_1.prisma.booking.findUnique({
         where: {
             id: bookingId,
         },
     });
     console.log(isExsistBokking);
-    const turist = yield prisma_1.prisma.user.findUnique({
-        where: {
-            id: isExsistBokking === null || isExsistBokking === void 0 ? void 0 : isExsistBokking.touristId,
-        },
-    });
-    console.log("this is turist", turist);
     if (!isExsistBokking) {
         throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Booking not found");
     }
+    const turist = yield prisma_1.prisma.user.findUnique({
+        where: {
+            id: isExsistBokking.touristId,
+        },
+    });
+    console.log("this is turist", turist);
     if (!turist) {
         throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Tourist not found");
     }
@@ -44,7 +44,7 @@ const paymentinit = (bookingId) => __awaiter(void 0, void 0, void 0, function* (
         },
     });
     if (!isExsitpayment) {
-        throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Tourist not found");
+        throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Payment not found");
     }
     if (!isExsitpayment.transactionId) {
         throw new appError_1.default(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR, "Transaction ID missing");
@@ -90,6 +90,7 @@ const success = (transactionId, validId) => __awaiter(void 0, void 0, void 0, fu
             },
             data: {
                 status: client_1.BookingStatus.COMPLETED,
+                paymentStatus: client_1.PaymentStatus.PAID,
             },
         });
         return {
@@ -119,7 +120,7 @@ const fail = (transactionId) => __awaiter(void 0, void 0, void 0, function* () {
         });
         const updatedBooking = yield tx.booking.update({
             where: { id: payment.bookingId },
-            data: { status: client_1.BookingStatus.CENCELLED },
+            data: { status: client_1.BookingStatus.CANCELLED },
         });
         return { updatedPayment, updatedBooking };
     }));
@@ -145,7 +146,7 @@ const cencel = (transactionId) => __awaiter(void 0, void 0, void 0, function* ()
         });
         const updatedBooking = yield tx.booking.update({
             where: { id: payment.bookingId },
-            data: { status: client_1.BookingStatus.CENCELLED },
+            data: { status: client_1.BookingStatus.CANCELLED },
         });
         return { updatedPayment, updatedBooking };
     }));

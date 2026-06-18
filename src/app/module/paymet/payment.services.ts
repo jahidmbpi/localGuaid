@@ -8,23 +8,24 @@ import { sslService } from "../../sslcommarz/sslcommarze.services";
 import { BookingStatus, PaymentStatus } from "@prisma/client";
 
 const paymentinit = async (bookingId: string) => {
-  console.log(bookingId);
+  console.log(bookingId, "from payment");
   const isExsistBokking = await prisma.booking.findUnique({
     where: {
       id: bookingId,
     },
   });
   console.log(isExsistBokking);
-  const turist = await prisma.user.findUnique({
-    where: {
-      id: isExsistBokking?.touristId,
-    },
-  });
-  console.log("this is turist", turist);
 
   if (!isExsistBokking) {
     throw new AppError(StatusCodes.NOT_FOUND, "Booking not found");
   }
+
+  const turist = await prisma.user.findUnique({
+    where: {
+      id: isExsistBokking.touristId,
+    },
+  });
+  console.log("this is turist", turist);
 
   if (!turist) {
     throw new AppError(StatusCodes.NOT_FOUND, "Tourist not found");
@@ -36,7 +37,7 @@ const paymentinit = async (bookingId: string) => {
     },
   });
   if (!isExsitpayment) {
-    throw new AppError(StatusCodes.NOT_FOUND, "Tourist not found");
+    throw new AppError(StatusCodes.NOT_FOUND, "Payment not found");
   }
   if (!isExsitpayment.transactionId) {
     throw new AppError(
@@ -92,6 +93,7 @@ const success = async (transactionId: string, validId: string) => {
       },
       data: {
         status: BookingStatus.COMPLETED,
+        paymentStatus: PaymentStatus.PAID,
       },
     });
 

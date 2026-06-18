@@ -16,11 +16,45 @@ const myBooking = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.prisma.booking.findMany({
         where: {
             touristId: id,
-            status: client_1.BookingStatus.CONFRIMED || client_1.BookingStatus.CENCELLED,
+            status: client_1.BookingStatus.CONFIRMED || client_1.BookingStatus.CANCELLED,
         },
     });
     return result;
 });
+const upcomingAndPastBokkingforTurist = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const currentDate = new Date();
+    // Upcoming bookings
+    const upcomingBookings = yield prisma_1.prisma.booking.findMany({
+        where: {
+            touristId: id,
+            status: client_1.BookingStatus.CONFIRMED,
+            startDate: {
+                gte: currentDate,
+            },
+        },
+        orderBy: {
+            startDate: "asc",
+        },
+    });
+    // Past bookings
+    const pastBookings = yield prisma_1.prisma.booking.findMany({
+        where: {
+            touristId: id,
+            status: client_1.BookingStatus.COMPLETED,
+            endDate: {
+                lt: currentDate,
+            },
+        },
+        orderBy: {
+            endDate: "desc",
+        },
+    });
+    return {
+        upcomingBookings,
+        pastBookings,
+    };
+});
 exports.turistServices = {
     myBooking,
+    upcomingAndPastBokkingforTurist,
 };

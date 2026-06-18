@@ -15,6 +15,20 @@ const myBooking = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const upcomingAndPastBokkingforTurist = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.user.userId;
+    const result = await turistServices.upcomingAndPastBokkingforTurist(id);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: " upcoming and past booking  for turist retrived success",
+      data: result,
+    });
+  },
+);
+
 export const turistController = {
   myBooking,
+  upcomingAndPastBokkingforTurist,
 };

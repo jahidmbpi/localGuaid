@@ -6,6 +6,9 @@ import { listingRouter } from "../module/listing/losting.route";
 import { bookingRouter } from "../module/booking/booking.route";
 import { paymentRouter } from "../module/paymet/payment.route";
 
+import { turistRouter } from "../module/turist/turist.route";
+import { deshbordRouter } from "../module/deshbord/deshbord.route";
+
 const router = Router();
 const moduleRoutes = [
   {
@@ -31,6 +34,14 @@ const moduleRoutes = [
   {
     path: "/payment",
     route: paymentRouter,
+  },
+  {
+    path: "/turist",
+    route: turistRouter,
+  },
+  {
+    path: "/deshbord",
+    route: deshbordRouter,
   },
 ];
 

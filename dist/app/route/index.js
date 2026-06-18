@@ -7,6 +7,8 @@ const guaid_route_1 = require("../module/guaid/guaid.route");
 const losting_route_1 = require("../module/listing/losting.route");
 const booking_route_1 = require("../module/booking/booking.route");
 const payment_route_1 = require("../module/paymet/payment.route");
+const turist_route_1 = require("../module/turist/turist.route");
+const deshbord_route_1 = require("../module/deshbord/deshbord.route");
 const router = (0, express_1.Router)();
 const moduleRoutes = [
     {
@@ -32,6 +34,14 @@ const moduleRoutes = [
     {
         path: "/payment",
         route: payment_route_1.paymentRouter,
+    },
+    {
+        path: "/turist",
+        route: turist_route_1.turistRouter,
+    },
+    {
+        path: "/deshbord",
+        route: deshbord_route_1.deshbordRouter,
     },
 ];
 moduleRoutes.forEach((route) => {
