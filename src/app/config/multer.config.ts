@@ -7,21 +7,22 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinaryUpload,
   params: {
     public_id: (req, file) => {
-      const fileName = file.originalname
+      const nameWithoutExtension = file.originalname.substring(
+        0,
+        file.originalname.lastIndexOf(".")
+      );
+      const fileName = nameWithoutExtension
         .toLocaleLowerCase()
         .replace(/\s+/g, "-")
         .replace(/\./g, "-")
-        .replace(/[^a-z0-9\-\.]/g, "");
+        .replace(/[^a-z0-9\-]/g, "");
 
-      const extension = file.originalname.split(".").pop();
       const uniqueFileName =
         Math.random().toString(36).substring(2) +
         "-" +
         Date.now() +
         "-" +
-        fileName +
-        "." +
-        extension;
+        fileName;
       return uniqueFileName;
     },
   },

@@ -11,7 +11,7 @@ const createUser = async (req: Request) => {
   if (image) {
     data.profilePhoto = image.path;
   }
-
+  console.log(image);
   const IsexsitUser = await prisma.user.findUnique({
     where: {
       email: data.email,
@@ -36,6 +36,7 @@ const createUser = async (req: Request) => {
   const result = await prisma.user.create({
     data: userData,
   });
+  console.log(result);
 
   const { password, ...withOutPassword } = result;
   return withOutPassword;
@@ -75,7 +76,10 @@ const updateUserById = async (req: Request) => {
       "this user already deleted,please constact authority",
     );
   }
-  if (user.role !== "ADMIN" && (isexsitUser.status === "BLOCK" || isexsitUser.status === "INACTIVE")) {
+  if (
+    user.role !== "ADMIN" &&
+    (isexsitUser.status === "BLOCK" || isexsitUser.status === "INACTIVE")
+  ) {
     throw new AppError(
       StatusCodes.FORBIDDEN,
       "This user is blocked or inactive. Please contact authority.",
