@@ -46,14 +46,14 @@ const createListing = (user, payload, files) => __awaiter(void 0, void 0, void 0
 const getAllLising = (filter, option) => __awaiter(void 0, void 0, void 0, function* () {
     const { page, limit, skip, sortBy, sortOrder } = (0, calculatePagination_1.default)(option);
     console.log(page, limit, skip);
-    const { searchTarm } = filter, filterData = __rest(filter, ["searchTarm"]);
-    console.log(searchTarm);
+    const { searchTerm } = filter, filterData = __rest(filter, ["searchTerm"]);
+    console.log(searchTerm);
     const andConditon = [];
-    if (searchTarm) {
+    if (searchTerm) {
         andConditon.push({
             OR: listing_constant_1.searchAbleField.map((field) => ({
                 [field]: {
-                    contains: searchTarm,
+                    contains: searchTerm,
                     mode: "insensitive",
                 },
             })),
@@ -76,6 +76,7 @@ const getAllLising = (filter, option) => __awaiter(void 0, void 0, void 0, funct
             [sortBy]: sortOrder,
         },
     });
+    console.log(result);
     const total = yield prisma_1.prisma.listing.count({
         where: whereCondition,
     });

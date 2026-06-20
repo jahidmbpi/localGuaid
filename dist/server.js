@@ -12,6 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const dns_1 = __importDefault(require("dns"));
+// Override dns.lookup globally to prefer/force IPv4 to bypass unreachable IPv6 NAT64 DNS resolution timeouts
+const originalLookup = dns_1.default.lookup;
+// @ts-ignore
+dns_1.default.lookup = function (hostname, options, callback) {
+    if (typeof options === "function") {
+        callback = options;
+        options = {};
+    }
+    const opt = typeof options === "number" ? { family: options } : Object.assign({}, options);
+    opt.family = 4;
+    return originalLookup(hostname, opt, callback);
+};
 const app_1 = __importDefault(require("./app"));
 const env_1 = require("./app/config/env");
 let server;

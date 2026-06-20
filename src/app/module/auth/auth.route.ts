@@ -5,6 +5,7 @@ import { Role } from "@prisma/client";
 
 const router = Router();
 router.post("/login", authController.logInWithEmailAndPassword);
+router.post("/logout", authController.logout);
 router.get("/me", cheakAuth(...Object.values(Role)), authController.Me);
 
 export const authRouter = router;

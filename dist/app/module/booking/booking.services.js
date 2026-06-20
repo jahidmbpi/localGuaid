@@ -17,6 +17,7 @@ const client_1 = require("@prisma/client");
 const prisma_1 = require("../../config/prisma");
 const appError_1 = __importDefault(require("../../helper/appError"));
 const http_status_codes_1 = require("http-status-codes");
+const sendEmail_1 = require("../../helper/sendEmail");
 const calculatePagination_1 = __importDefault(require("../../sheard/calculatePagination"));
 const uuid_1 = require("uuid");
 const createBooking = (payload, user, listingId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -135,6 +136,7 @@ const myBooking = (id, option) => __awaiter(void 0, void 0, void 0, function* ()
     };
 });
 const updateBooking = (bookingId, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     console.log(payload, "this console from payload");
     const isExistBooking = yield prisma_1.prisma.booking.findUnique({
         where: { id: bookingId },
@@ -157,7 +159,33 @@ const updateBooking = (bookingId, payload) => __awaiter(void 0, void 0, void 0, 
         data: {
             status: payload.status,
         },
+        include: {
+            Tourist: true,
+            listing: true,
+        },
     });
+    // Send status update email to tourist asynchronously
+    if ((_a = updated.Tourist) === null || _a === void 0 ? void 0 : _a.email) {
+        const emailSubject = `Booking Status Updated: ${payload.status}`;
+        const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+        <h2 style="color: #2563eb; text-align: center;">Booking Status Update</h2>
+        <p>Dear ${updated.Tourist.name || "Valued Tourist"},</p>
+        <p>The status of your booking for the tour <strong>"${updated.listing.title}"</strong> has been updated to <strong style="color: #2563eb;">${payload.status}</strong>.</p>
+        <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>Booking ID:</strong> ${updated.id}</p>
+          <p style="margin: 5px 0;"><strong>Tour Name:</strong> ${updated.listing.title}</p>
+          <p style="margin: 5px 0;"><strong>New Status:</strong> ${payload.status}</p>
+        </div>
+        <p>Thank you for choosing LocalGuide!</p>
+        <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #6b7280; text-align: center;">
+          This is an automated email from LocalGuide Tourism Platform. Please do not reply directly to this email.
+        </p>
+      </div>
+    `;
+        (0, sendEmail_1.sendEmail)(updated.Tourist.email, emailSubject, emailHtml);
+    }
     return updated;
 });
 const turistBooking = (id, option) => __awaiter(void 0, void 0, void 0, function* () {

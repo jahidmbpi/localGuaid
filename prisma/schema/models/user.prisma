@@ -19,6 +19,7 @@ model User {
   parmanentAddress String?
   touristBookings Booking[] @relation("TouristBookings")
   guideBookings   Booking[] @relation("GuideBookings")
+  wishlists       Wishlist[]
   createdAt DateTime @default(now())
  updatedAt DateTime @updatedAt
  @@map("user")

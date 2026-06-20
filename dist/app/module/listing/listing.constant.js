@@ -7,7 +7,6 @@ exports.searchAbleField = [
     "itinerary",
     "city",
     "category",
-    "price",
     "meetingPoint",
 ];
 exports.filterableField = [

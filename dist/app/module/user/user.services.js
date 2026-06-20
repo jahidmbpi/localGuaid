@@ -35,6 +35,7 @@ const createUser = (req) => __awaiter(void 0, void 0, void 0, function* () {
     if (image) {
         data.profilePhoto = image.path;
     }
+    console.log(image);
     const IsexsitUser = yield prisma_1.prisma.user.findUnique({
         where: {
             email: data.email,
@@ -49,6 +50,7 @@ const createUser = (req) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.prisma.user.create({
         data: userData,
     });
+    console.log(result);
     const { password } = result, withOutPassword = __rest(result, ["password"]);
     return withOutPassword;
 });
@@ -81,10 +83,11 @@ const updateUserById = (req) => __awaiter(void 0, void 0, void 0, function* () {
     if (isexsitUser.isDeleted) {
         throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "this user already deleted,please constact authority");
     }
-    if (isexsitUser.status === "BLOCK" || isexsitUser.status === "INACTIVE") {
+    if (user.role !== "ADMIN" &&
+        (isexsitUser.status === "BLOCK" || isexsitUser.status === "INACTIVE")) {
         throw new appError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, "This user is blocked or inactive. Please contact authority.");
     }
-    if (isexsitUser.role !== user.role) {
+    if (user.role !== "ADMIN" && isexsitUser.role !== user.role) {
         throw new appError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "you are not authorized fff");
     }
     const result = yield prisma_1.prisma.user.update({

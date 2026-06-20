@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import { prisma } from "../../config/prisma";
 import AppError from "../../helper/appError";
 import { StatusCodes } from "http-status-codes";
+import { sendEmail } from "../../helper/sendEmail";
 
 import { sslService } from "../../sslcommarz/sslcommarze.services";
 import { BookingStatus, PaymentStatus } from "@prisma/client";
@@ -71,6 +72,14 @@ const success = async (transactionId: string, validId: string) => {
     where: {
       transactionId,
     },
+    include: {
+      booking: {
+        include: {
+          Tourist: true,
+          listing: true,
+        },
+      },
+    },
   });
 
   if (!payment) {
@@ -102,6 +111,31 @@ const success = async (transactionId: string, validId: string) => {
       booking: updatedBooking,
     };
   });
+
+  // Send success email to tourist asynchronously
+  if (payment.booking?.Tourist?.email) {
+    const emailSubject = "Booking Completed Successfully!";
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+        <h2 style="color: #2563eb; text-align: center;">Booking Confirmation</h2>
+        <p>Dear ${payment.booking.Tourist.name || "Valued Tourist"},</p>
+        <p>Your payment for the tour <strong>"${payment.booking.listing.title}"</strong> has been successfully processed!</p>
+        <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>Booking ID:</strong> ${payment.booking.id}</p>
+          <p style="margin: 5px 0;"><strong>Amount Paid:</strong> ৳ ${payment.booking.totalAmount}</p>
+          <p style="margin: 5px 0;"><strong>Start Date:</strong> ${new Date(payment.booking.startDate).toLocaleDateString()}</p>
+          <p style="margin: 5px 0;"><strong>End Date:</strong> ${new Date(payment.booking.endDate).toLocaleDateString()}</p>
+        </div>
+        <p>Thank you for choosing LocalGuide. Have an amazing trip!</p>
+        <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #6b7280; text-align: center;">
+          This is an automated email from LocalGuide Tourism Platform. Please do not reply directly to this email.
+        </p>
+      </div>
+    `;
+    sendEmail(payment.booking.Tourist.email, emailSubject, emailHtml);
+  }
+
   return {
     success: true,
     message: "Payment completed successfully",

@@ -3,6 +3,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../../config/prisma";
 import AppError from "../../helper/appError";
 import { StatusCodes } from "http-status-codes";
+import { sendEmail } from "../../helper/sendEmail";
 import { ICreateBooking } from "./booking.interface";
 import { IPagination } from "../../interface/interface";
 import calculatatePagination from "../../sheard/calculatePagination";
@@ -191,7 +192,35 @@ const updateBooking = async (
     data: {
       status: payload.status as BookingStatus,
     },
+    include: {
+      Tourist: true,
+      listing: true,
+    },
   });
+
+  // Send status update email to tourist asynchronously
+  if (updated.Tourist?.email) {
+    const emailSubject = `Booking Status Updated: ${payload.status}`;
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+        <h2 style="color: #2563eb; text-align: center;">Booking Status Update</h2>
+        <p>Dear ${updated.Tourist.name || "Valued Tourist"},</p>
+        <p>The status of your booking for the tour <strong>"${updated.listing.title}"</strong> has been updated to <strong style="color: #2563eb;">${payload.status}</strong>.</p>
+        <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>Booking ID:</strong> ${updated.id}</p>
+          <p style="margin: 5px 0;"><strong>Tour Name:</strong> ${updated.listing.title}</p>
+          <p style="margin: 5px 0;"><strong>New Status:</strong> ${payload.status}</p>
+        </div>
+        <p>Thank you for choosing LocalGuide!</p>
+        <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #6b7280; text-align: center;">
+          This is an automated email from LocalGuide Tourism Platform. Please do not reply directly to this email.
+        </p>
+      </div>
+    `;
+    sendEmail(updated.Tourist.email, emailSubject, emailHtml);
+  }
+
   return updated;
 };
 

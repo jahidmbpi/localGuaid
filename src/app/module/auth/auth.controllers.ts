@@ -29,7 +29,29 @@ const Me = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const logout = catchAsync(async (req: Request, res: Response) => {
+  res.clearCookie("accessTocken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+  });
+  res.clearCookie("refreshTocken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+  });
+
+  sendResponse(res, {
+    success: true,
+    message: "Logged out successfully",
+    statusCode: StatusCodes.OK,
+    data: null,
+  });
+});
+
 export const authController = {
   logInWithEmailAndPassword,
   Me,
+  logout,
 };

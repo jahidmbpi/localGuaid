@@ -16,6 +16,7 @@ exports.paymentServices = void 0;
 const prisma_1 = require("../../config/prisma");
 const appError_1 = __importDefault(require("../../helper/appError"));
 const http_status_codes_1 = require("http-status-codes");
+const sendEmail_1 = require("../../helper/sendEmail");
 const sslcommarze_services_1 = require("../../sslcommarz/sslcommarze.services");
 const client_1 = require("@prisma/client");
 const paymentinit = (bookingId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -63,6 +64,7 @@ const paymentinit = (bookingId) => __awaiter(void 0, void 0, void 0, function* (
     };
 });
 const success = (transactionId, validId) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
     console.log("this is success");
     console.log(transactionId);
     const validateresponse = yield sslcommarze_services_1.sslService.validatePyment(validId);
@@ -70,6 +72,14 @@ const success = (transactionId, validId) => __awaiter(void 0, void 0, void 0, fu
     const payment = yield prisma_1.prisma.payment.findFirst({
         where: {
             transactionId,
+        },
+        include: {
+            booking: {
+                include: {
+                    Tourist: true,
+                    listing: true,
+                },
+            },
         },
     });
     if (!payment) {
@@ -98,6 +108,29 @@ const success = (transactionId, validId) => __awaiter(void 0, void 0, void 0, fu
             booking: updatedBooking,
         };
     }));
+    // Send success email to tourist asynchronously
+    if ((_b = (_a = payment.booking) === null || _a === void 0 ? void 0 : _a.Tourist) === null || _b === void 0 ? void 0 : _b.email) {
+        const emailSubject = "Booking Completed Successfully!";
+        const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+        <h2 style="color: #2563eb; text-align: center;">Booking Confirmation</h2>
+        <p>Dear ${payment.booking.Tourist.name || "Valued Tourist"},</p>
+        <p>Your payment for the tour <strong>"${payment.booking.listing.title}"</strong> has been successfully processed!</p>
+        <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>Booking ID:</strong> ${payment.booking.id}</p>
+          <p style="margin: 5px 0;"><strong>Amount Paid:</strong> ৳ ${payment.booking.totalAmount}</p>
+          <p style="margin: 5px 0;"><strong>Start Date:</strong> ${new Date(payment.booking.startDate).toLocaleDateString()}</p>
+          <p style="margin: 5px 0;"><strong>End Date:</strong> ${new Date(payment.booking.endDate).toLocaleDateString()}</p>
+        </div>
+        <p>Thank you for choosing LocalGuide. Have an amazing trip!</p>
+        <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
+        <p style="font-size: 12px; color: #6b7280; text-align: center;">
+          This is an automated email from LocalGuide Tourism Platform. Please do not reply directly to this email.
+        </p>
+      </div>
+    `;
+        (0, sendEmail_1.sendEmail)(payment.booking.Tourist.email, emailSubject, emailHtml);
+    }
     return {
         success: true,
         message: "Payment completed successfully",

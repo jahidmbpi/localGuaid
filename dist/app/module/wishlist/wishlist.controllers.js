@@ -12,51 +12,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authController = void 0;
+exports.wishlistController = void 0;
 const catchAsync_1 = __importDefault(require("../../sheard/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../sheard/sendResponse"));
 const http_status_codes_1 = require("http-status-codes");
-const auth_services_1 = require("./auth.services");
-const logInWithEmailAndPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const payload = req.body;
-    const result = yield auth_services_1.authServices.logInWithEmailAndPassword(res, payload);
+const wishlist_services_1 = require("./wishlist.services");
+const addToWishlist = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.user.userId;
+    const { listingId } = req.body;
+    const result = yield wishlist_services_1.wishlistServices.addToWishlist(userId, listingId);
     (0, sendResponse_1.default)(res, {
-        success: true,
-        message: "login",
         statusCode: http_status_codes_1.StatusCodes.CREATED,
+        success: true,
+        message: "Listing added to wishlist successfully",
         data: result,
     });
 }));
-const Me = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.user;
-    const result = yield auth_services_1.authServices.Me(user);
+const removeFromWishlist = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.user.userId;
+    const { listingId } = req.params;
+    const result = yield wishlist_services_1.wishlistServices.removeFromWishlist(userId, listingId);
     (0, sendResponse_1.default)(res, {
-        success: true,
-        message: "logedIn user retrived succesfully",
         statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: "Listing removed from wishlist successfully",
         data: result,
     });
 }));
-const logout = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.clearCookie("accessTocken", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-    });
-    res.clearCookie("refreshTocken", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-    });
+const getMyWishlist = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.user.userId;
+    const result = yield wishlist_services_1.wishlistServices.getMyWishlist(userId);
     (0, sendResponse_1.default)(res, {
-        success: true,
-        message: "Logged out successfully",
         statusCode: http_status_codes_1.StatusCodes.OK,
-        data: null,
+        success: true,
+        message: "My wishlist retrieved successfully",
+        data: result,
     });
 }));
-exports.authController = {
-    logInWithEmailAndPassword,
-    Me,
-    logout,
+exports.wishlistController = {
+    addToWishlist,
+    removeFromWishlist,
+    getMyWishlist,
 };

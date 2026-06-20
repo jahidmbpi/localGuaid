@@ -8,6 +8,7 @@ import { paymentRouter } from "../module/paymet/payment.route";
 
 import { turistRouter } from "../module/turist/turist.route";
 import { deshbordRouter } from "../module/deshbord/deshbord.route";
+import { wishlistRouter } from "../module/wishlist/wishlist.route";
 
 const router = Router();
 const moduleRoutes = [
@@ -42,6 +43,10 @@ const moduleRoutes = [
   {
     path: "/deshbord",
     route: deshbordRouter,
+  },
+  {
+    path: "/wishlist",
+    route: wishlistRouter,
   },
 ];
 
